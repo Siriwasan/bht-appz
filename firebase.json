@@ -1,0 +1,19 @@
+{
+  "hosting": [
+    {
+      "target": "bht-appz",
+      "public": "dist/bht-appz",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "bht-appz": {
+      "hosting": {
+        "bht-appz": [
+          "bht-appz"
+        ]
+      }
+    }
+  }
+}
