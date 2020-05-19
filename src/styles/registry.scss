@@ -1,0 +1,423 @@
+@import '~@angular/material/theming';
+
+reg-input,
+reg-select,
+reg-select-multiple,
+reg-select-search,
+reg-datepicker {
+  padding: 5px 10px;
+}
+
+//#region Multi-line
+
+// placeholder text
+::ng-deep .mat-form-field-label {
+  white-space: normal !important;
+}
+
+reg-input {
+  ::ng-deep .mat-form-field-label-wrapper {
+    height: 45px !important;
+    top: -37px !important;
+    display: flex;
+    align-items: flex-end;
+
+    label {
+      position: unset !important;
+    }
+  }
+
+  ::ng-deep .mat-form-field-appearance-legacy.mat-form-field-can-float.mat-form-field-should-float label {
+    transform: translateY(-1.1em) scale(0.75) perspective(100px) translateZ(0.001px) !important;
+    -ms-transform: translateY(-1.1em) scale(0.75) !important;
+  }
+}
+
+// reg-select {
+// ::ng-deep .mat-form-field-label-wrapper {
+//   display: flex;
+//   align-items: flex-end;
+//   top: -25px !important;
+//   height: 50px !important;
+
+//   label {
+//     position: unset !important;
+//   }
+// }
+
+//   ::ng-deep
+//     .mat-form-field-appearance-legacy.mat-form-field-can-float.mat-form-field-should-float
+//     label {
+//     transform: translateY(-1.4em) scale(0.75) perspective(100px) translateZ(0.001px) !important;
+//     -ms-transform: translateY(-1.4em) scale(0.75) !important;
+//   }
+// }
+
+// mat-select value
+::ng-deep .mat-select-value {
+  white-space: normal !important;
+}
+
+// mat-select value text
+::ng-deep .mat-select-value-text {
+  white-space: normal !important;
+}
+
+// mat-select option (1)
+::ng-deep .mat-option {
+  height: auto !important;
+}
+
+// mat-select option (2)
+::ng-deep .mat-option-text {
+  white-space: normal;
+  line-height: 1.4;
+  // text-indent: -15px;
+  // padding: 11px 15px 11px 15px;
+  padding: 11px 0;
+  display: flex !important;
+  align-items: center;
+}
+
+//#endregion
+
+.registry-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.sidebar-container {
+  /* When the sidenav is not fixed, stretch the sidenav container to fill the available space. This
+     causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
+  flex: 1;
+}
+
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  overflow: auto;
+}
+
+.registry-name {
+  margin: 0;
+  padding: 20px 20px 0 20px;
+}
+
+.section-wrapper {
+  // border: 1px solid rgba(0, 0, 0, 0.03);
+  // box-shadow: 0 2px 2px rgba(0, 0, 0, 0.24), 0 0 2px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgb(219, 219, 219);
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.24);
+  margin: 20px;
+}
+
+.section-title {
+  color: rgba(0, 0, 0, 0.54);
+  background: rgb(242, 242, 242);
+  align-content: center;
+  align-items: center;
+  display: flex;
+  // justify-content: center;
+  padding: 8px 15px;
+  height: 40px;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  flex-direction: row;
+  place-content: center space-between;
+  z-index: 1;
+}
+
+.section-body {
+  padding: 5px;
+  overflow: auto;
+}
+
+.table-of-contents {
+  width: 210px;
+  padding-left: 20px;
+  padding-right: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  ul {
+    padding-inline-start: 0px;
+  }
+
+  li {
+    // padding: 2px 0; // original
+    list-style-type: none;
+    cursor: pointer;
+
+    // line indentation
+    list-style-position: inside;
+    text-indent: -1em;
+    padding: 2px 0 2px 10px;
+  }
+
+  .toc-name {
+    text-decoration: none;
+    display: inline-block;
+    font-size: small;
+    font-weight: 300;
+    color: #757575;
+    padding-left: 30px;
+    // padding-left: 16px; // original
+    height: 1.5rem;
+    line-height: 1.5rem;
+    letter-spacing: 0.4;
+    display: inline-block;
+    cursor: pointer;
+
+    &:hover {
+      color: #a8a8a8;
+      padding-left: 29px;
+      // padding-left: 15px; // origial
+      border-left: 1px solid #ee6e73;
+    }
+  }
+
+  .toc-name.active {
+    // color: rgba(0, 0, 0, 0.8);
+    font-weight: 500;
+    padding-left: 28px; //original
+    // padding-left: 14px;
+    border-left: 2px solid #ee6e73;
+  }
+
+  .toc-completion {
+    padding-left: 5px;
+    font-size: xx-small;
+    font-weight: 200;
+    color: #757575;
+  }
+}
+
+.toc-title {
+  margin: 4px 0;
+  position: relative;
+  list-style-type: none;
+  cursor: pointer;
+
+  span {
+    // background: white;
+    padding-right: 8px;
+    // text-transform: uppercase;
+  }
+
+  &:before {
+    background: rgba(0, 0, 0, 0.14);
+    content: '';
+    display: block;
+    height: 1px;
+    margin-left: 80px;
+    width: 100%;
+    z-index: -1;
+    position: absolute;
+    top: 11px;
+
+    @media (min-width: 100px) {
+      width: 50%;
+    }
+  }
+}
+
+.completion-content {
+  border-top: 1px solid rgb(224, 224, 224);
+  height: 250px;
+  display: flex;
+}
+
+.progress-wrapper {
+  margin: 25px;
+  width: 200px;
+  height: 200px;
+}
+
+.summary {
+  position: relative;
+  color: #bbb;
+  line-height: 1.2;
+  font-size: 35px;
+  font-weight: 200;
+  text-align: center;
+
+  top: -50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  -moz-transform: translateY(-50%) translateX(-50%);
+  -webkit-transform: translateY(-50%) translateX(-50%);
+
+  .completion {
+    font-size: 65%;
+  }
+}
+
+.completion-mini-content {
+  border-top: 1px solid rgb(224, 224, 224);
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mini-summary {
+  color: #bbb;
+  font-size: 35px;
+  font-weight: 200;
+}
+
+.speed-dial-container {
+  position: fixed;
+  bottom: 15px;
+  right: 40px;
+  z-index: 100;
+}
+
+.reg-container {
+  flex-flow: row wrap;
+  box-sizing: border-box;
+  display: flex;
+  flex: 1 1 auto;
+  align-items: flex-end;
+}
+
+.reg-container-col {
+  flex-flow: column nowrap;
+  box-sizing: border-box;
+  display: flex;
+  flex: 1 1 auto;
+}
+
+@mixin big-input-component-theme($theme) {
+  // retrieve variables from theme
+  // (all possible variables, use only what you really need)
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, accent);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  // all of these variables contain many additional variables
+  $focused-button-color: mat-color($background-palette, focused-button);
+
+  // .reg-title {
+  //   background-color: $focused-button-color !important;
+  //   color: #757575;
+  // }
+}
+
+.reg-item-indent {
+  margin-left: 1em;
+
+  ::ng-deep .mat-form-field::before {
+    content: '•';
+    color: #c2c2c2;
+    position: absolute;
+    top: 1.3em;
+    left: -1em;
+  }
+}
+
+.reg-item-indent2 {
+  margin-left: 1.5em;
+
+  ::ng-deep .mat-form-field::before {
+    content: '••';
+    color: #c2c2c2;
+    position: absolute;
+    top: 1.3em;
+    left: -1.5em;
+  }
+}
+
+.reg-item-indent3 {
+  margin-left: 2em;
+
+  ::ng-deep .mat-form-field::before {
+    content: '•••';
+    color: #c2c2c2;
+    position: absolute;
+    top: 1.3em;
+    left: -2em;
+  }
+}
+
+.reg-item-indent4 {
+  margin-left: 2.5em;
+
+  ::ng-deep .mat-form-field::before {
+    content: '••••';
+    color: #c2c2c2;
+    position: absolute;
+    top: 1.3em;
+    left: -2.5em;
+  }
+}
+
+.reg-item-indent5 {
+  margin-left: 3em;
+
+  ::ng-deep .mat-form-field::before {
+    content: '•••••';
+    color: #c2c2c2;
+    position: absolute;
+    top: 1.3em;
+    left: -3em;
+  }
+}
+
+.reg-title {
+  padding-left: 10px;
+  padding-top: 20px;
+  // color: #757575;
+  // color: var(--secondary-text-color);
+}
+
+.reg-subtitle {
+  padding-left: 10px;
+  padding-top: 10px;
+  margin-bottom: 5px;
+  // color: #757575;
+  // color: var(--secondary-text-color);
+}
+
+.reg-subtitle2 {
+  padding-left: 20px;
+  padding-top: 10px;
+  margin-bottom: 5px;
+  // color: #757575;
+  // color: var(--secondary-text-color);
+}
+
+.reg-header {
+  padding-left: 10px;
+  padding-bottom: 25px;
+  color: #757575;
+}
+
+.section-subtitle {
+  padding-left: 10px;
+  padding-top: 20px;
+}
+
+.fieldset-label {
+  border: 1px solid #a1a1a1;
+  border-radius: 10px;
+  padding: 5px;
+  margin: 10px;
+
+  legend {
+    color: #757575;
+    margin-left: 8px;
+  }
+}
+
+// fxFlex="1 0 200px" fxFlex.gt-md="1 0 250px"

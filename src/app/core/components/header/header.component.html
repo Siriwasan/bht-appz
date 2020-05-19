@@ -1,0 +1,26 @@
+<mat-toolbar>
+
+  <mat-toolbar-row>
+    <button mat-icon-button (click)="toggleNavbar()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start center" style="margin-left: 10px;">
+      <img src="assets/images/bdms-logo.png" alt="Bangkok Hospital" style="width: 32px;">
+      <h1>BHT Appz</h1>
+    </div>
+    <div fxFlex fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="flex-end">
+      <!-- <button mat-icon-button>
+        <mat-icon>settings</mat-icon>
+      </button>
+
+      <button mat-icon-button>
+        <mat-icon>help_outline</mat-icon>
+      </button> -->
+
+      <button mat-icon-button *ngIf="(device$ | async) === 'HandsetPortrait' && (sidebarMode$ | async)"
+        (click)="toggleSidebar()">
+        <mat-icon>more_horiz</mat-icon>
+      </button>
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>

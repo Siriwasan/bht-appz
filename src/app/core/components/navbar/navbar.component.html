@@ -1,0 +1,46 @@
+<mat-nav-list>
+  <div class="profile-card">
+    <div class="header">
+      <h2>Siriwasan A.</h2>
+      <h4>example@email.com</h4>
+    </div>
+    <img src="assets/images/avatar.jpg" alt="Siriwasan A." />
+  </div>
+
+  <a mat-list-item>
+    <mat-slide-toggle [checked]="(theme$ | async) === 'dark'" (change)="toggleDarkTheme($event.checked)">Dark theme
+    </mat-slide-toggle>
+  </a>
+
+  <a mat-list-item routerLink="/home" routerLinkActive="active" (click)="onNavItemSelected()">
+    <mat-icon>assignment</mat-icon>
+    <span class="nav-caption">My Patients</span>
+  </a>
+
+  <a mat-list-item routerLink="/login" routerLinkActive="active" (click)="onNavItemSelected()">
+    <mat-icon>mood</mat-icon>
+    <span class="nav-caption">Login</span>
+  </a>
+
+  <mat-divider></mat-divider>
+
+  <h2 mat-subheader>CathLab Quotation</h2>
+
+  <a mat-list-item routerLinkActive="active" (click)="onNavItemSelected('/registry/acsd/acsd290')" id="acsd290">
+    <mat-icon>list</mat-icon>
+    <span class="nav-caption">List</span>
+  </a>
+
+  <a mat-list-item routerLink="/registry/test-form3" routerLinkActive="active" (click)="onNavItemSelected()">
+    <mat-icon>list</mat-icon>
+    <span class="nav-caption">Devices</span>
+  </a>
+
+  <mat-divider></mat-divider>
+
+  <a mat-list-item routerLink="#" routerLinkActive="active" (click)="onNavItemSelected()">
+    <mat-icon>info_outline</mat-icon>
+    <span class="nav-caption">About</span>
+  </a>
+
+</mat-nav-list>

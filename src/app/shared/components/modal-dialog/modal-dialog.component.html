@@ -1,0 +1,9 @@
+<h2 mat-dialog-title [class]="data.style" *ngIf="data.title !== null">{{ data.title }}</h2>
+<div mat-dialog-content class="markdown-body">
+  <div [innerHTML]="data.content | noSanitize"></div>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button *ngFor="let button of data.buttons" [mat-dialog-close]="button" cdkFocusInitial>
+    {{ button }}
+  </button>
+</div>
