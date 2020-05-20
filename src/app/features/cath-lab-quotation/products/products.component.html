@@ -1,0 +1,64 @@
+<mat-form-field>
+  <mat-label>Filter</mat-label>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium">
+</mat-form-field>
+
+<mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+  <ng-container matColumnDef="name">
+    <mat-header-cell class="header-center" style="flex: 25%" mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+    <mat-cell style="flex: 25%" mat-cell *matCellDef="let element"> {{ element.name }} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="brand">
+    <mat-header-cell class="header-center" style="flex: 15%" mat-header-cell *matHeaderCellDef>Brand</mat-header-cell>
+    <mat-cell class="cell-center" style="flex: 15%" mat-cell *matCellDef="let element"> {{ element.brand }} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="category">
+    <mat-header-cell class="header-center" style="flex: 15%" mat-header-cell *matHeaderCellDef>Category
+    </mat-header-cell>
+    <mat-cell class="cell-center" style="flex: 15%" mat-cell *matCellDef="let element"> {{ element.category }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="thaiPrice">
+    <mat-header-cell class="header-center" style="flex: 15%" mat-header-cell *matHeaderCellDef>Thai Price
+    </mat-header-cell>
+    <mat-cell class="cell-center" style="flex: 15%" mat-cell *matCellDef="let element"> {{ element.thaiPrice }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="interPrice">
+    <mat-header-cell class="header-center" style="flex: 15%" mat-header-cell *matHeaderCellDef>Inter Price
+    </mat-header-cell>
+    <mat-cell class="cell-center" style="flex: 15%" mat-cell *matCellDef="let element"> {{ element.interPrice }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="updatedDateTime">
+    <mat-header-cell class="header-center" style="flex: 15%" mat-header-cell *matHeaderCellDef>Updated</mat-header-cell>
+    <mat-cell class="cell-center" style="flex: 15%" mat-cell *matCellDef="let element">
+      {{ element.updatedDateTime | isoDate:"datetime" }} </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row class="table-row" *matRowDef="let row; columns: displayedColumns;" (click)="productClicked(row)"></mat-row>
+
+  <!-- Group header -->
+  <ng-container matColumnDef="groupReducer">
+    <mat-cell colspan="1" fxFlex="55px" *matCellDef="let group">
+      <div fxLayoutAlign="center center">
+        <mat-icon *ngIf="!group.collapsed">expand_less</mat-icon>
+        <mat-icon *ngIf="group.collapsed">expand_more</mat-icon>
+      </div>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="groupHeader">
+    <mat-cell colspan="999" fxFlex *matCellDef="let group"><strong>{{group.label}}</strong></mat-cell>
+  </ng-container>
+
+  <mat-row class="product-group" *matRowDef="let row; columns: ['groupReducer','groupHeader']; when: isGroup"
+    (click)="groupClicked(row)">
+  </mat-row>
+</mat-table>

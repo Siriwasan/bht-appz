@@ -22,13 +22,13 @@ export class NavbarComponent implements OnInit {
   onNavItemSelected(url?: string) {
     this.navItemSelected.emit();
 
-    if (url && url !== this.router.url) {
-      this.store.dispatch(AppStoreActions.startLoading());
-      setTimeout(() => {
-        this.router.navigateByUrl(url);
-      }, 50);
-    }
-    document.getElementById('acsd290').classList.toggle('active', url === '/registry/acsd/acsd290');
+    // if (url && url !== this.router.url) {
+    //   this.store.dispatch(AppStoreActions.startLoading());
+    //   setTimeout(() => {
+    //     this.router.navigateByUrl(url);
+    //   }, 50);
+    // }
+    // document.getElementById('acsd290').classList.toggle('active', url === '/registry/acsd/acsd290');
   }
 
   toggleDarkTheme(checked: boolean) {

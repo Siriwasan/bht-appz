@@ -27,11 +27,17 @@ const routes: Routes = [
         // canActivate: [AuthRoleGuard],
         // data: { roles: Auth.menus.registry }
       },
+      {
+        path: 'cath-lab-quotation',
+        loadChildren: () => import('./features/cath-lab-quotation/cath-lab-quotation.module').then((m) => m.CathLabQuotationModule),
+        // canActivate: [AuthRoleGuard],
+        // data: { roles: Auth.menus.registry }
+      },
 
       // { path: 'about', component: AboutComponent },
       // { path: 'auth', component: AuthComponent },
       // { path: 'page-not-autherized', component: PageNotAutherizedComponent },
-      { path: '', redirectTo: '/registry/gtsd', pathMatch: 'full' },
+      { path: '', redirectTo: '/cath-lab-quotation', pathMatch: 'full' },
     ],
   },
 ];

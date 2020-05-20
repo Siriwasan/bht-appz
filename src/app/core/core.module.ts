@@ -7,11 +7,10 @@ import { HeaderComponent } from './components/header/header.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { AppLayoutComponent } from './components/app-layout/app-layout.component';
 import { SharedModule } from '../shared/shared.module';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [HeaderComponent, NavbarComponent, AppLayoutComponent],
   imports: [CommonModule, BrowserModule, BrowserAnimationsModule, SharedModule],
-  exports: [CommonModule, BrowserModule, BrowserAnimationsModule, HeaderComponent, NavbarComponent],
+  exports: [BrowserModule, BrowserAnimationsModule, HeaderComponent, NavbarComponent],
 })
 export class CoreModule {}
