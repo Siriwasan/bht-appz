@@ -3,6 +3,8 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import * as mock from '../cath-lab-quotation.mock';
 import { ProductGroup, Product, GroupBy } from '../cath-lab-quotation.model';
+import { MatDialog } from '@angular/material/dialog';
+import { ProductComponent } from '../product/product.component';
 
 @Component({
   selector: 'app-products',
@@ -15,10 +17,10 @@ export class ProductsComponent implements OnInit {
   private flattedProducts: (Product | GroupBy)[] = [];
   private collapsedGroup: GroupBy[] = [];
 
-  displayedColumns: string[] = ['name', 'brand', 'category', 'thaiPrice', 'interPrice', 'updatedDateTime'];
+  displayedColumns: string[] = ['name', 'brand', 'category', 'thaiPrice', 'interPrice', 'status', 'updatedDateTime'];
   dataSource: MatTableDataSource<Product | GroupBy>;
 
-  constructor() {}
+  constructor(private dialog: MatDialog) {}
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -26,11 +28,12 @@ export class ProductsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.groupData();
+    this.groupingProducts();
     this.flattenGroupedProducts();
   }
 
-  private groupData() {
+  private groupingProducts() {
+    this.groupedProducts = [];
     this.products.forEach(
       ((hash: ProductGroup) => {
         return (a: Product) => {
@@ -71,7 +74,39 @@ export class ProductsComponent implements OnInit {
     this.flattenGroupedProducts();
   }
 
+  private productDialog(product: Product) {
+    return this.dialog.open(ProductComponent, {
+      width: '640px',
+      disableClose: true,
+      autoFocus: true,
+      data: product,
+    });
+  }
+
   productClicked(product: Product) {
-    console.log(product);
+    this.productDialog(product)
+      .afterClosed()
+      .subscribe((result: Product) => {
+        if (result) {
+          const index = this.products.findIndex((el) => el.id === result.id);
+          this.products[index] = result;
+
+          this.groupingProducts();
+          this.flattenGroupedProducts();
+        }
+      });
+  }
+
+  addClicked() {
+    this.productDialog(null)
+      .afterClosed()
+      .subscribe((result: Product) => {
+        if (result) {
+          this.products.push(result);
+
+          this.groupingProducts();
+          this.flattenGroupedProducts();
+        }
+      });
   }
 }

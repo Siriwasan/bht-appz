@@ -1,7 +1,13 @@
-<mat-form-field>
-  <mat-label>Filter</mat-label>
-  <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium">
-</mat-form-field>
+<h1>Products</h1>
+
+<div>
+  <mat-form-field fxFlex>
+    <mat-label>Filter</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium">
+  </mat-form-field>
+  <button style="width: 75px; height: 36px; margin-left: 20px;" mat-raised-button color="primary"
+    (click)="addClicked()">Add</button>
+</div>
 
 <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
@@ -23,16 +29,26 @@
   </ng-container>
 
   <ng-container matColumnDef="thaiPrice">
-    <mat-header-cell class="header-center" style="flex: 15%" mat-header-cell *matHeaderCellDef>Thai Price
+    <mat-header-cell class="header-center" style="flex: 10%" mat-header-cell *matHeaderCellDef>Thai Price
     </mat-header-cell>
-    <mat-cell class="cell-center" style="flex: 15%" mat-cell *matCellDef="let element"> {{ element.thaiPrice }}
+    <mat-cell class="cell-center" style="flex: 10%" mat-cell *matCellDef="let element">
+      {{ element.thaiPrice | number:'1.2-3' }}
     </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="interPrice">
-    <mat-header-cell class="header-center" style="flex: 15%" mat-header-cell *matHeaderCellDef>Inter Price
+    <mat-header-cell class="header-center" style="flex: 10%" mat-header-cell *matHeaderCellDef>Inter Price
     </mat-header-cell>
-    <mat-cell class="cell-center" style="flex: 15%" mat-cell *matCellDef="let element"> {{ element.interPrice }}
+    <mat-cell class="cell-center" style="flex: 10%" mat-cell *matCellDef="let element">
+      {{ element.interPrice | number:'1.2-3' }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="status">
+    <mat-header-cell class="header-center" style="flex: 10%" mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+    <mat-cell class="cell-center" style="flex: 10%"
+      [style.color]="element.status === 'In stock' ? 'black' : element.status === 'Discontinue' ? 'red' : 'orange'"
+      mat-cell *matCellDef="let element"> {{ element.status }}
     </mat-cell>
   </ng-container>
 

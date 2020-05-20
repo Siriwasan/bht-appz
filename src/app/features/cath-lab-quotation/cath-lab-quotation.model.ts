@@ -18,6 +18,7 @@ export interface Product {
   category: string;
   thaiPrice: number;
   interPrice: number;
+  status: string; // 'In stock', 'Discontinued', 'Postpone'
   updatedDateTime: string;
 }
 

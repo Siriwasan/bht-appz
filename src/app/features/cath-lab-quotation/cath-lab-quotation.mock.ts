@@ -9,6 +9,7 @@ export const products: Product[] = [
     category: 'Stent',
     thaiPrice: 1000,
     interPrice: 1500,
+    status: 'In stock',
     updatedDateTime: '2020-03-21T18:20:00.000+07:00',
   },
   {
@@ -19,6 +20,7 @@ export const products: Product[] = [
     category: 'Wire',
     thaiPrice: 100,
     interPrice: 150,
+    status: 'In stock',
     updatedDateTime: '2020-03-21T18:20:00.000+07:00',
   },
   {
@@ -29,6 +31,7 @@ export const products: Product[] = [
     category: 'Stent',
     thaiPrice: 2000,
     interPrice: 3000,
+    status: 'Discontinue',
     updatedDateTime: '2020-03-21T18:20:00.000+07:00',
   },
   {
@@ -39,6 +42,7 @@ export const products: Product[] = [
     category: 'Stent',
     thaiPrice: 3000,
     interPrice: 4500,
+    status: 'In stock',
     updatedDateTime: '2020-03-21T18:20:00.000+07:00',
   },
   {
@@ -49,6 +53,7 @@ export const products: Product[] = [
     category: 'Wire',
     thaiPrice: 300,
     interPrice: 450,
+    status: 'Postpone',
     updatedDateTime: '2020-03-21T18:20:00.000+07:00',
   },
 ];
