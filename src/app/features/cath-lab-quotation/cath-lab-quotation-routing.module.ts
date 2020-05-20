@@ -13,6 +13,10 @@ const routes: Routes = [
     loadChildren: () => import('./quotation/quotation.module').then((m) => m.QuotationModule),
   },
   {
+    path: 'quotations',
+    loadChildren: () => import('./quotations/quotations.module').then((m) => m.QuotationsModule),
+  },
+  {
     path: 'products',
     loadChildren: () => import('./products/products.module').then((m) => m.ProductsModule),
   },

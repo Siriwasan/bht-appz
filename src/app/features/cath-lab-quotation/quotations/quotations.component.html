@@ -1,0 +1,52 @@
+<mat-form-field>
+  <mat-label>Filter</mat-label>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium">
+</mat-form-field>
+
+<mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+  <ng-container matColumnDef="hn">
+    <mat-header-cell class="header-center" style="flex: 10%" mat-header-cell *matHeaderCellDef>HN</mat-header-cell>
+    <mat-cell class="cell-center" style="flex: 10%" mat-cell *matCellDef="let element"> {{ element.hn }} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="patient">
+    <mat-header-cell class="header-center" style="flex: 20%" mat-header-cell *matHeaderCellDef>Patient</mat-header-cell>
+    <mat-cell mat-cell style="flex: 20%" *matCellDef="let element"> {{ element.patient }} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="age">
+    <mat-header-cell class="header-center" style="flex: 5%" mat-header-cell *matHeaderCellDef>Age</mat-header-cell>
+    <mat-cell class="cell-center" style="flex: 5%" mat-cell *matCellDef="let element"> {{ element.age }} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="procedure">
+    <mat-header-cell class="header-center" style="flex: 25%" mat-header-cell *matHeaderCellDef>Procedure
+    </mat-header-cell>
+    <mat-cell class="cell-center" style="flex: 25%" mat-cell *matCellDef="let element"> {{ element.procedure }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="procedureDateTime">
+    <mat-header-cell class="header-center" style="flex: 15%" mat-header-cell *matHeaderCellDef>Date/Time
+    </mat-header-cell>
+    <mat-cell class="cell-center" style="flex: 15%" mat-cell *matCellDef="let element">
+      {{ element.procedureDateTime | isoDate:"datetime" }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="physician">
+    <mat-header-cell class="header-center" style="flex: 15%" mat-header-cell *matHeaderCellDef>Physician
+    </mat-header-cell>
+    <mat-cell mat-cell style="flex: 15%" *matCellDef="let element"> {{ element.physician }} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="offerDateTime">
+    <mat-header-cell class="header-center" style="flex: 10%" mat-header-cell *matHeaderCellDef>Offer</mat-header-cell>
+    <mat-cell class="cell-center" style="flex: 10%" mat-cell *matCellDef="let element">
+      {{ element.offerDateTime | isoDate }} </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row class="table-row" *matRowDef="let row; columns: displayedColumns;" (click)="quotationClicked()"></mat-row>
+</mat-table>
