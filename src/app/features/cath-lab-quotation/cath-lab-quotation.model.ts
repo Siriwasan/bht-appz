@@ -19,6 +19,7 @@ export interface Product {
   thaiPrice: number;
   interPrice: number;
   status: string; // 'In stock', 'Discontinued', 'Postpone'
+  note?: string;
   updatedDateTime: string;
 }
 
@@ -35,11 +36,15 @@ export interface Quotation {
   birthdate: string;
   age: number;
   payment: string;
-  procedure: string;
   physician: string;
+  procedure: string;
   procedureDateTime: string;
   useProducts: ProductOrder[];
   backupProducts?: ProductOrder[];
-  quotedDateTime: string;
+  totalPrice: number;
+  backupPrice?: number;
+  priceVariation: number;
+  note?: string;
   quotedBy: string;
+  quotedDateTime: string;
 }

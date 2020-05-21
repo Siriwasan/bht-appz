@@ -1,1 +1,91 @@
-<p>quotation works!</p>
+<h1>Quotation</h1>
+
+<form [formGroup]="quotationForm" fxLayout="column" class="quotation-form mat-elevation-z2">
+  <div>
+    <reg-input controlName="hn" placeholder="HN" [formGroup]="quotationForm" type="text" fxFlex
+      [controlService]="controlService"></reg-input>
+
+    <reg-input controlName="an" placeholder="AN" [formGroup]="quotationForm" type="text" fxFlex
+      [controlService]="controlService"></reg-input>
+
+    <reg-select controlName="payment" placeholder="Payment" [formGroup]="quotationForm" [choices]="[
+      'Thai',
+      'Inter'
+      ]" fxFlex [nullOption]="false" [controlService]="controlService">
+    </reg-select>
+  </div>
+
+  <div>
+    <reg-input controlName="patient" placeholder="Patient" [formGroup]="quotationForm" type="text" fxFlex
+      [controlService]="controlService"></reg-input>
+
+    <reg-datepicker controlName="birthdate" placeholder="Birth Date" [formGroup]="quotationForm" fxFlex>dd/mm/yyyy
+    </reg-datepicker>
+
+    <reg-input controlName="age" placeholder="Age" [formGroup]="quotationForm" type="number" fxFlex
+      [controlService]="controlService" [readonly]="true"></reg-input>
+  </div>
+
+  <div>
+    <reg-input controlName="physician" placeholder="Physician" [formGroup]="quotationForm" type="text" fxFlex
+      [controlService]="controlService"></reg-input>
+
+    <reg-select controlName="procedure" placeholder="Procedure" [formGroup]="quotationForm" [choices]="[
+      'CAG',
+      'CAG + PCI',
+      'PCI'
+      ]" fxFlex [nullOption]="false" [controlService]="controlService">
+    </reg-select>
+
+    <reg-datepicker controlName="procedureDateTime" placeholder="Procedure Date/Time" [formGroup]="quotationForm"
+      type="datetime" fxFlex>dd/mm/yyyy hh:mm</reg-datepicker>
+  </div>
+
+  <fieldset class="fieldset-label">
+    <legend>Use Products</legend>
+    <div formArrayName="useProducts" *ngFor="let fg of quotationForm.get('useProducts')['controls']; let i = index;">
+      <div fxLayoutAlign="center center">
+
+        <button mat-icon-button color="warn" aria-label="Close" (click)="removeUseProduct(i)">
+          <mat-icon>close</mat-icon>
+        </button>
+
+        <div [formGroup]="fg" fxFlex>
+          <reg-select-search controlName="product" placeholder="Product" [formGroup]="fg" [choices]="products" fxFlex
+            [nullOption]="false" [group]="true" sortChoice="asc" sortGroup="asc" [controlService]="controlService">
+          </reg-select-search>
+
+          <reg-input controlName="unitPrice" placeholder="Unit Price" [formGroup]="fg" type="text" fxFlex="15"
+            [controlService]="controlService" [readonly]="true"></reg-input>
+
+          <reg-input controlName="quantity" placeholder="Quantity" [formGroup]="fg" type="number" fxFlex="15"
+            [controlService]="controlService"></reg-input>
+
+          <reg-input controlName="price" placeholder="Price" [formGroup]="fg" type="text" fxFlex="15"
+            [controlService]="controlService" [readonly]="true"></reg-input>
+        </div>
+      </div>
+    </div>
+    <div fxLayoutAlign="end center">
+      <button style="margin-left: 10px; margin-right: 10px;" mat-stroked-button color="primary"
+        (click)="addUseProducts()" [disabled]="!canAddUseProduct" fxFlex>Add</button>
+      <h4 style="margin: 0">Total Price</h4>
+      <reg-input controlName="totalPrice" placeholder="Total Price" [formGroup]="quotationForm" type="text" fxFlex="15"
+        [controlService]="controlService"></reg-input>
+    </div>
+  </fieldset>
+
+  <reg-input controlName="backupProducts" placeholder="Backup Products" [formGroup]="quotationForm" type="text" fxFlex
+    [require]="false" [controlService]="controlService"></reg-input>
+
+  <reg-textarea controlName="note" placeholder="Note" [formGroup]="quotationForm" type="text" fxFlex [require]="false"
+    [controlService]="controlService" [height]="'75px'"></reg-textarea>
+
+  <reg-input controlName="quotedBy" placeholder="Quoted By" [formGroup]="quotationForm" type="text" fxFlex
+    [controlService]="controlService"></reg-input>
+
+  <reg-input controlName="quotedDateTime" placeholder="Quoted Date/Time" [formGroup]="quotationForm" type="text" fxFlex
+    [controlService]="controlService"></reg-input>
+</form>
+
+{{ quotationForm.value | json }}

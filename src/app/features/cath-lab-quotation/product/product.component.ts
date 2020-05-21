@@ -9,6 +9,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./product.component.scss'],
 })
 export class ProductComponent implements OnInit {
+  controlService = null;
   productForm: FormGroup;
   addMode = false;
 
@@ -27,6 +28,7 @@ export class ProductComponent implements OnInit {
       thaiPrice: [data.thaiPrice, [Validators.required, Validators.min(0), Validators.max(1000000)]],
       interPrice: [data.interPrice, [Validators.required, Validators.min(0), Validators.max(1000000)]],
       status: [data.status, Validators.required],
+      note: [data.note],
       updatedDateTime: [data.updatedDateTime],
     });
   }
@@ -44,6 +46,7 @@ export class ProductComponent implements OnInit {
       thaiPrice: value.thaiPrice,
       interPrice: value.interPrice,
       status: value.status,
+      note: value.note ? value.note.trim() : null,
       updatedDateTime: new Date().toISOString(),
     };
     this.dialogRef.close(product);

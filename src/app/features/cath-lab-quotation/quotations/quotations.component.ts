@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 
 import * as mock from '../cath-lab-quotation.mock';
+import { Quotation } from '../cath-lab-quotation.model';
 
 @Component({
   selector: 'app-quotations',
@@ -17,11 +19,11 @@ export class QuotationsComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
-  constructor() {}
+  constructor(private router: Router) {}
 
   ngOnInit(): void {}
 
-  quotationClicked() {
-    console.log('quotation click!!');
+  quotationClicked(quatation: Quotation) {
+    this.router.navigate(['cath-lab-quotation/quotation', quatation.id]);
   }
 }

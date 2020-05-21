@@ -1,54 +1,55 @@
-<h1 mat-dialog-title>{{ productForm.controls['name'].value }}</h1>
-<div mat-dialog-content fxLayout="column">
-  <form [formGroup]="productForm">
+<div fxLayoutAlign="space-between center" style="margin-bottom: 16px;">
+  <h1 mat-dialog-title style="margin-bottom: 0;">{{ productForm.controls['name'].value }}</h1>
+  <button mat-icon-button color="warn" aria-label="Close" mat-dialog-close tabindex="-1">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<div mat-dialog-content>
+  <form [formGroup]="productForm" fxLayout="column">
     <div>
-      <mat-form-field fxFlex>
-        <mat-label>Name</mat-label>
-        <input matInput formControlName="name" required>
-      </mat-form-field>
+      <reg-input controlName="name" placeholder="Name" [formGroup]="productForm" type="text" fxFlex
+        [controlService]="controlService"></reg-input>
     </div>
 
     <div>
-      <mat-form-field fxFlex>
-        <mat-label>Description</mat-label>
-        <textarea style="height: 150px;" matInput formControlName="description"></textarea>
-      </mat-form-field>
+      <reg-textarea controlName="description" placeholder="Description" [formGroup]="productForm" type="text" fxFlex
+        [controlService]="controlService" [height]="'150px'" [require]="false"></reg-textarea>
     </div>
 
     <div>
-      <mat-form-field fxFlex>
-        <mat-label>Brand</mat-label>
-        <input matInput formControlName="brand" required>
-      </mat-form-field>
-      <mat-form-field fxFlex>
-        <mat-label>Category</mat-label>
-        <mat-select formControlName="category" required>
-          <mat-option *ngFor="let category of ['Stent', 'Wire', 'Balloon']" [value]="category">{{category}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+      <reg-input controlName="brand" placeholder="Brand" [formGroup]="productForm" type="text" fxFlex
+        [controlService]="controlService"></reg-input>
+
+      <reg-select controlName="category" placeholder="Category" [formGroup]="productForm" [choices]="[
+        'Stent',
+        'Wire',
+        'Balloon'
+        ]" fxFlex [nullOption]="false" [controlService]="controlService">
+      </reg-select>
     </div>
 
     <div>
-      <mat-form-field fxFlex>
-        <mat-label>Thai Price (฿)</mat-label>
-        <input matInput formControlName="thaiPrice" type="number" required>
-      </mat-form-field>
-      <mat-form-field fxFlex>
-        <mat-label>Inter Price (฿)</mat-label>
-        <input matInput formControlName="interPrice" type="number" required>
-      </mat-form-field>
+      <reg-input controlName="thaiPrice" placeholder="Thai Price (฿)" [formGroup]="productForm" type="number" fxFlex
+        [controlService]="controlService"></reg-input>
+
+      <reg-input controlName="interPrice" placeholder="Inter Price (฿)" [formGroup]="productForm" type="number" fxFlex
+        [controlService]="controlService"></reg-input>
     </div>
 
     <div>
-      <mat-form-field fxFlex>
-        <mat-label>Status</mat-label>
-        <mat-select formControlName="status" required>
-          <mat-option *ngFor="let status of ['In stock', 'Discontinue', 'Postpone']" [value]="status">{{ status }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+      <reg-select controlName="status" placeholder="Status" [formGroup]="productForm" [choices]="[
+        'In stock',
+        'Discontinue',
+        'Postpone'
+        ]" fxFlex [nullOption]="false" [controlService]="controlService">
+      </reg-select>
     </div>
+
+    <div>
+      <reg-textarea controlName="note" placeholder="Note" [formGroup]="productForm" type="text" fxFlex
+        [controlService]="controlService" [height]="'75px'" [require]="false"></reg-textarea>
+    </div>
+
   </form>
 </div>
 <div mat-dialog-actions align="end">

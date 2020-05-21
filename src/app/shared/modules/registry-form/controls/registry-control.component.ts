@@ -10,6 +10,7 @@ export class RegistryControlComponent implements OnInit {
   @Input() placeholder: string;
   @Input() require = true;
   @Input() readonly = false;
+  @Input() floatLabel = 'auto';
   @Input() controlService: IRegistryControlService = null;
 
   bInfo: boolean;

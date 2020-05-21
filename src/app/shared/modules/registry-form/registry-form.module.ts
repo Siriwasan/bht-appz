@@ -8,11 +8,13 @@ import { RegistryDatePickerComponent } from './controls/registry-date-picker.com
 import { RegistrySelectComponent } from './controls/registry-select.component';
 import { RegistrySelectSearchComponent } from './controls/registry-select-search.component';
 import { RegistrySelectMultipleComponent } from './controls/registry-select-multiple.component';
+import { RegistryTextareaComponent } from './controls/registry-textarea.component';
 // import { RegistryAutocompleteComponent } from './registry-autocomplete.component';
 
 @NgModule({
   declarations: [
     RegistryInputComponent,
+    RegistryTextareaComponent,
     RegistryDatePickerComponent,
     RegistrySelectComponent,
     RegistrySelectSearchComponent,
@@ -22,6 +24,7 @@ import { RegistrySelectMultipleComponent } from './controls/registry-select-mult
   imports: [SharedModule],
   exports: [
     RegistryInputComponent,
+    RegistryTextareaComponent,
     RegistryDatePickerComponent,
     RegistrySelectComponent,
     RegistrySelectSearchComponent,

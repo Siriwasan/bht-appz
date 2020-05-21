@@ -17,7 +17,7 @@ export class ProductsComponent implements OnInit {
   private flattedProducts: (Product | GroupBy)[] = [];
   private collapsedGroup: GroupBy[] = [];
 
-  displayedColumns: string[] = ['name', 'brand', 'category', 'thaiPrice', 'interPrice', 'status', 'updatedDateTime'];
+  displayedColumns: string[] = ['description', 'name', 'brand', 'category', 'thaiPrice', 'interPrice', 'status', 'updatedDateTime'];
   dataSource: MatTableDataSource<Product | GroupBy>;
 
   constructor(private dialog: MatDialog) {}

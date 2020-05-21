@@ -11,9 +11,16 @@
 
 <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
+  <ng-container matColumnDef="description">
+    <mat-header-cell class="header-center" style="flex: 3%" mat-header-cell *matHeaderCellDef></mat-header-cell>
+    <mat-cell style="flex: 3%" mat-cell *matCellDef="let element">
+      <mat-icon fontSet="material-icons-outlined" *ngIf="element.description">description</mat-icon>
+    </mat-cell>
+  </ng-container>
+
   <ng-container matColumnDef="name">
-    <mat-header-cell class="header-center" style="flex: 25%" mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
-    <mat-cell style="flex: 25%" mat-cell *matCellDef="let element"> {{ element.name }} </mat-cell>
+    <mat-header-cell class="header-center" style="flex: 22%" mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+    <mat-cell style="flex: 25%" mat-cell *matCellDef="let element">{{ element.name }}</mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="brand">

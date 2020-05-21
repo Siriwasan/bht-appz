@@ -4,10 +4,10 @@ import { RegistryControlComponent } from './registry-control.component';
 
 @Component({
   // tslint:disable-next-line: component-selector
-  selector: 'reg-input',
+  selector: 'reg-textarea',
   template: `
-    <mat-form-field [formGroup]="formGroup" style="width: 100%" [floatLabel]="floatLabel">
-      <input
+    <mat-form-field [formGroup]="formGroup" style="width: 100%">
+      <textarea
         [type]="type"
         matInput
         [formControlName]="controlName"
@@ -16,7 +16,8 @@ import { RegistryControlComponent } from './registry-control.component';
         [required]="require"
         [readonly]="readonly"
         (focusout)="onFocusOut()"
-      />
+        [style.height]="height"
+      ></textarea>
       <mat-hint>
         <a><ng-content></ng-content></a>
         <mat-icon style="cursor: help;" (click)="openInfo(controlName)" *ngIf="bInfo">
@@ -35,8 +36,9 @@ import { RegistryControlComponent } from './registry-control.component';
   `,
   styleUrls: ['./registry-control.component.scss'],
 })
-export class RegistryInputComponent extends RegistryControlComponent implements OnInit {
+export class RegistryTextareaComponent extends RegistryControlComponent implements OnInit {
   @Input() type = 'text';
+  @Input() height = 'auto';
   @Output() focusOut: EventEmitter<void> = new EventEmitter();
 
   constructor(protected elementRef: ElementRef) {

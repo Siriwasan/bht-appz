@@ -48,5 +48,5 @@
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row class="table-row" *matRowDef="let row; columns: displayedColumns;" (click)="quotationClicked()"></mat-row>
+  <mat-row class="table-row" *matRowDef="let row; columns: displayedColumns;" (click)="quotationClicked(row)"></mat-row>
 </mat-table>
