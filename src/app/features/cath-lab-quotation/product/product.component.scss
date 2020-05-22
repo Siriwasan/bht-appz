@@ -1,6 +1,25 @@
 reg-input,
 reg-textarea,
 reg-datepicker,
-reg-select {
+reg-select,
+reg-select-search {
   margin: 5px 10px;
+}
+
+reg-input {
+  ::ng-deep input:read-only {
+    color: #757575;
+  }
+}
+
+.fieldset-label {
+  border: 1px solid #a1a1a1;
+  border-radius: 10px;
+  padding: 5px;
+  margin: 10px;
+
+  legend {
+    color: #757575;
+    margin-left: 8px;
+  }
 }

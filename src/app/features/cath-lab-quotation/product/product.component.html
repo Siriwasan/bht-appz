@@ -4,7 +4,7 @@
     <mat-icon>close</mat-icon>
   </button>
 </div>
-<div mat-dialog-content>
+<div mat-dialog-content style="min-width: 880px;">
   <form [formGroup]="productForm" fxLayout="column">
     <div>
       <reg-input controlName="name" placeholder="Name" [formGroup]="productForm" type="text" fxFlex
@@ -23,17 +23,56 @@
       <reg-select controlName="category" placeholder="Category" [formGroup]="productForm" [choices]="[
         'Stent',
         'Wire',
-        'Balloon'
+        'Balloon',
+        '# Pre-set #',
+        '# Bundle #'
         ]" fxFlex [nullOption]="false" [controlService]="controlService">
       </reg-select>
     </div>
 
+    <fieldset class="fieldset-label" *ngIf="enableSubProducts">
+      <legend>Sub Products</legend>
+      <div formArrayName="subProducts" *ngFor="let fg of productForm.get('subProducts')['controls']; let i = index;">
+        <div fxLayoutAlign="center center">
+
+          <button mat-icon-button color="warn" aria-label="Close" (click)="removeSubProduct(i)">
+            <mat-icon>close</mat-icon>
+          </button>
+
+          <div [formGroup]="fg" fxFlex>
+            <reg-select-search controlName="product" placeholder="Product" [formGroup]="fg" [choices]="subProducts[i]"
+              fxFlex [nullOption]="false" [group]="true" sortChoice="asc" sortGroup="asc"
+              [controlService]="controlService">
+            </reg-select-search>
+
+            <reg-input controlName="quantity" placeholder="Quantity" [formGroup]="fg" type="number" fxFlex="15"
+              [controlService]="controlService"></reg-input>
+
+            <reg-input controlName="thaiPrice" placeholder="Thai Price" [formGroup]="fg" type="text" fxFlex="15"
+              [controlService]="controlService" [readonly]="true"></reg-input>
+
+            <reg-input controlName="interPrice" placeholder="Inter Price" [formGroup]="fg" type="text" fxFlex="15"
+              [controlService]="controlService" [readonly]="true"></reg-input>
+          </div>
+        </div>
+      </div>
+      <div fxLayoutAlign="end center">
+        <button style="margin-left: 10px; margin-right: 10px;" mat-stroked-button color="primary"
+          (click)="addSubProducts()" [disabled]="!canAddSubProduct" fxFlex>Add</button>
+        <h4 style="margin: 0px 10px 0px 10px">Sum</h4>
+        <reg-input controlName="sumThaiPrice" placeholder="Sum Thai Price" [formGroup]="productForm" type="text"
+          fxFlex="14.5" [controlService]="controlService" [readonly]="true" [require]="false"></reg-input>
+        <reg-input controlName="sumInterPrice" placeholder="Sum Inter Price" [formGroup]="productForm" type="text"
+          fxFlex="14.5" [controlService]="controlService" [readonly]="true" [require]="false"></reg-input>
+      </div>
+    </fieldset>
+
     <div>
       <reg-input controlName="thaiPrice" placeholder="Thai Price (฿)" [formGroup]="productForm" type="number" fxFlex
-        [controlService]="controlService"></reg-input>
+        [controlService]="controlService" [readonly]="isPreset"></reg-input>
 
       <reg-input controlName="interPrice" placeholder="Inter Price (฿)" [formGroup]="productForm" type="number" fxFlex
-        [controlService]="controlService"></reg-input>
+        [controlService]="controlService" [readonly]="isPreset"></reg-input>
     </div>
 
     <div>
@@ -56,3 +95,5 @@
   <button mat-button (click)="submit()" [disabled]="!productForm.valid">{{ addMode ? 'Create' : 'Update' }}</button>
   <button mat-button mat-dialog-close>Discard</button>
 </div>
+
+{{ productForm.value | json }}

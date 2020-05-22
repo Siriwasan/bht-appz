@@ -76,7 +76,7 @@ export class ProductsComponent implements OnInit {
 
   private productDialog(product: Product) {
     return this.dialog.open(ProductComponent, {
-      width: '640px',
+      width: 'auto',
       disableClose: true,
       autoFocus: true,
       data: product,

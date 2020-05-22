@@ -69,7 +69,7 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
     const productFormGroup = this.fb.group({
       product: [null, Validators.required],
       unitPrice: [null, Validators.required],
-      quantity: [1, [Validators.required, Validators.pattern(/^(?:[0-9]|10)$/)]],
+      quantity: [1, [Validators.required, Validators.pattern(/^(?:[1-9]|10)$/)]],
       price: [null, Validators.required],
     });
 
@@ -86,13 +86,13 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
 
           productFormGroup
             .get('unitPrice')
-            .setValue(unitPrice.toLocaleString(undefined, { minimumFractionDigits: 2 }), { onlySelf: true, emitEvent: false });
+            .setValue(unitPrice.toLocaleString(undefined, { minimumFractionDigits: 2 }), { emitEvent: false });
 
           if (productFormGroup.get('quantity').valid && value.quantity) {
             price = (unitPrice * quantity).toLocaleString(undefined, { minimumFractionDigits: 2 });
           }
 
-          productFormGroup.get('price').setValue(price, { onlySelf: true, emitEvent: false });
+          productFormGroup.get('price').setValue(price, { emitEvent: false });
         }
 
         this.calculateUsePrice();

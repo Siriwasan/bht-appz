@@ -1,8 +1,15 @@
-export interface GroupBy {
-  group: string;
-  label: string;
-  isGroup: boolean;
-  collapsed: boolean;
+export interface Product {
+  id: number;
+  name: string;
+  description: string;
+  brand: string;
+  category: string; // 'Stent', 'Wire', 'Balloon', '# Pre-set #', '# Bundle #'
+  subProducts?: { productId: number; quantity: number }[];
+  thaiPrice: number;
+  interPrice: number;
+  status: string; // 'In stock', 'Discontinued', 'Postpone'
+  note?: string;
+  updatedDateTime: string;
 }
 
 export interface ProductGroup {
@@ -10,17 +17,11 @@ export interface ProductGroup {
   products: Product[];
 }
 
-export interface Product {
-  id: number;
-  name: string;
-  description: string;
-  brand: string;
-  category: string;
-  thaiPrice: number;
-  interPrice: number;
-  status: string; // 'In stock', 'Discontinued', 'Postpone'
-  note?: string;
-  updatedDateTime: string;
+export interface GroupBy {
+  group: string;
+  label: string;
+  isGroup: boolean;
+  collapsed: boolean;
 }
 
 export interface ProductOrder {
