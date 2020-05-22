@@ -40,10 +40,11 @@ export interface Quotation {
   procedure: string;
   procedureDateTime: string;
   useProducts: ProductOrder[];
+  usePrice: number;
   backupProducts?: ProductOrder[];
-  totalPrice: number;
   backupPrice?: number;
   priceVariation: number;
+  estimatedPrice: string;
   note?: string;
   quotedBy: string;
   quotedDateTime: string;

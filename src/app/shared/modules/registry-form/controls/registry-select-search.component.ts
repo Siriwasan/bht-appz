@@ -45,11 +45,7 @@ import { takeUntil, take } from 'rxjs/operators';
         <mat-option *ngIf="nullOption" [value]="null">--</mat-option>
         <div *ngIf="group; else no_group">
           <mat-optgroup *ngFor="let group of filteredChoiceGroups | async" [label]="group.name">
-            <mat-option
-              *ngFor="let choice of group.choices"
-              [value]="choice.value"
-              [disabled]="choice.disable"
-            >
+            <mat-option *ngFor="let choice of group.choices" [value]="choice.value" [disabled]="choice.disable">
               {{ choice.altLabel ? choice.altLabel : choice.label }}
               <div *ngIf="choice.detailHtml">
                 <span class="detail-html" [innerHTML]="choice.detailHtml"></span>
@@ -58,11 +54,7 @@ import { takeUntil, take } from 'rxjs/operators';
           </mat-optgroup>
         </div>
         <ng-template #no_group>
-          <mat-option
-            *ngFor="let choice of filteredChoices | async"
-            [value]="choice.value"
-            [disabled]="choice.disable"
-          >
+          <mat-option *ngFor="let choice of filteredChoices | async" [value]="choice.value" [disabled]="choice.disable">
             {{ choice.label }}
             <div *ngIf="choice.detailHtml">
               <span class="detail-html" [innerHTML]="choice.detailHtml"></span>
@@ -89,8 +81,7 @@ import { takeUntil, take } from 'rxjs/operators';
   styleUrls: ['./registry-control.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class RegistrySelectSearchComponent extends RegistryControlComponent
-  implements OnInit, AfterViewInit, OnChanges, OnDestroy {
+export class RegistrySelectSearchComponent extends RegistryControlComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @Input() nullOption = true;
   @Input() sortChoice = ''; // asc, desc
   @Input() sortGroup = ''; // asc, desc
@@ -114,12 +105,8 @@ export class RegistrySelectSearchComponent extends RegistryControlComponent
   public filterCtrl: FormControl = new FormControl();
 
   /** list of banks filtered by search keyword */
-  public filteredChoices: ReplaySubject<RegSelectChoice[]> = new ReplaySubject<RegSelectChoice[]>(
-    1
-  );
-  public filteredChoiceGroups: ReplaySubject<RegSelectChoiceGroup[]> = new ReplaySubject<
-    RegSelectChoiceGroup[]
-  >(1);
+  public filteredChoices: ReplaySubject<RegSelectChoice[]> = new ReplaySubject<RegSelectChoice[]>(1);
+  public filteredChoiceGroups: ReplaySubject<RegSelectChoiceGroup[]> = new ReplaySubject<RegSelectChoiceGroup[]>(1);
 
   @ViewChild('singleSelect', { static: true }) singleSelect: MatSelect;
 
@@ -200,13 +187,9 @@ export class RegistrySelectSearchComponent extends RegistryControlComponent
 
   private sortRegSelectChoiceGroups() {
     if (this.sortGroup === 'asc') {
-      this.regSelectChoiceGroups = this.regSelectChoiceGroups.sort((a, b) =>
-        a.name < b.name ? -1 : 1
-      );
+      this.regSelectChoiceGroups = this.regSelectChoiceGroups.sort((a, b) => (a.name < b.name ? -1 : 1));
     } else if (this.sortGroup === 'desc') {
-      this.regSelectChoiceGroups = this.regSelectChoiceGroups.sort((a, b) =>
-        a.name > b.name ? -1 : 1
-      );
+      this.regSelectChoiceGroups = this.regSelectChoiceGroups.sort((a, b) => (a.name > b.name ? -1 : 1));
     }
     this.filteredChoiceGroups.next(this.regSelectChoiceGroups.slice());
   }
@@ -230,8 +213,7 @@ export class RegistrySelectSearchComponent extends RegistryControlComponent
       // the form control (i.e. _initializeSelection())
       // this needs to be done after the filteredBanks are loaded initially
       // and after the mat-option elements are available
-      this.singleSelect.compareWith = (a: RegSelectChoice, b: RegSelectChoice) =>
-        a && b && a.value === b.value;
+      this.singleSelect.compareWith = (a: RegSelectChoice, b: RegSelectChoice) => a && b && a.value === b.value;
     });
   }
 

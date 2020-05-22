@@ -51,7 +51,7 @@
         </button>
 
         <div [formGroup]="fg" fxFlex>
-          <reg-select-search controlName="product" placeholder="Product" [formGroup]="fg" [choices]="products" fxFlex
+          <reg-select-search controlName="product" placeholder="Product" [formGroup]="fg" [choices]="products[i]" fxFlex
             [nullOption]="false" [group]="true" sortChoice="asc" sortGroup="asc" [controlService]="controlService">
           </reg-select-search>
 
@@ -69,9 +69,16 @@
     <div fxLayoutAlign="end center">
       <button style="margin-left: 10px; margin-right: 10px;" mat-stroked-button color="primary"
         (click)="addUseProducts()" [disabled]="!canAddUseProduct" fxFlex>Add</button>
-      <h4 style="margin: 0">Total Price</h4>
-      <reg-input controlName="totalPrice" placeholder="Total Price" [formGroup]="quotationForm" type="text" fxFlex="15"
-        [controlService]="controlService"></reg-input>
+      <h4 style="margin: 0">Use Price</h4>
+      <reg-input controlName="usePrice" placeholder="Use Price" [formGroup]="quotationForm" type="text" fxFlex="15"
+        [controlService]="controlService" [readonly]="true"></reg-input>
+    </div>
+    <div fxLayoutAlign="end center">
+      <reg-input controlName="priceVariation" placeholder="Variation (%)" [formGroup]="quotationForm" type="number"
+        fxFlex="15" [controlService]="controlService"></reg-input>
+      <h4 style="margin: 0">Estimated Price</h4>
+      <reg-input controlName="estimatedPrice" placeholder="Estimated Price" [formGroup]="quotationForm" type="text"
+        fxFlex="15" [controlService]="controlService" [readonly]="true"></reg-input>
     </div>
   </fieldset>
 
@@ -89,3 +96,7 @@
 </form>
 
 {{ quotationForm.value | json }}
+
+<br>
+<br>
+<br>
