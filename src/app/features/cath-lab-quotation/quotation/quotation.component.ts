@@ -74,8 +74,11 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     this.subscriptions.push(
-      productFormGroup.get('product').valueChanges.subscribe((value) => {
+      productFormGroup.get('product').valueChanges.subscribe((value: Product) => {
         this.canAddUseProduct = true;
+        if (value.category === '# Pre-set #') {
+          this.addByPreSet(value);
+        }
         this.generateProductList();
       }),
       productFormGroup.valueChanges.subscribe((value: ProductOrder) => {
@@ -132,10 +135,35 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
     this.quotationForm.get('estimatedPrice').setValue(estimatedPrice);
   }
 
-  addUseProducts() {
+  addUseProducts(subProduct?: { productId: number; quantity: number }) {
     const useProducts = this.quotationForm.get('useProducts') as FormArray;
-    useProducts.push(this.createProductSubForm());
-    this.canAddUseProduct = false;
+    const useProductForm = this.createProductSubForm();
+
+    if (subProduct) {
+      const product = mock.products.find((p) => p.id === subProduct.productId);
+      const quantity = subProduct.quantity;
+      let isDuplicated = false;
+
+      for (let index = 0; index < useProducts.controls.length; index++) {
+        const element = useProducts.controls[index];
+
+        if (useProducts.value[index].product === product) {
+          const newQuantity = +useProducts.value[index].quantity + quantity;
+          element.get('quantity').setValue(newQuantity);
+          isDuplicated = true;
+        }
+      }
+
+      if (!isDuplicated) {
+        useProductForm.get('product').setValue(product);
+        useProductForm.get('quantity').setValue(quantity);
+        useProducts.push(useProductForm);
+        this.canAddUseProduct = true;
+      }
+    } else {
+      useProducts.push(useProductForm);
+      this.canAddUseProduct = false;
+    }
 
     this.calculateUsePrice();
     this.generateProductList();
@@ -154,6 +182,18 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
     this.generateProductList();
   }
 
+  private addByPreSet(preSet: Product) {
+    console.log(preSet);
+    const useProducts = this.quotationForm.get('useProducts') as FormArray;
+
+    this.removeUseProduct(useProducts.controls.length - 1);
+
+    preSet.subProducts.forEach((subProduct) => {
+      console.log(subProduct);
+      this.addUseProducts(subProduct);
+    });
+  }
+
   private generateProductList() {
     const useProducts = this.quotationForm.get('useProducts') as FormArray;
 
@@ -168,14 +208,16 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
     useProducts.controls.forEach((control: FormGroup) => {
       const selectedProduct = control.controls[`product`].value;
 
-      const productChoice = mock.products.map((product) => {
-        return {
-          value: product,
-          label: product.name + ' - ' + product.brand,
-          group: product.category,
-          disable: product !== selectedProduct && selectedProducts.includes(product),
-        } as RegSelectChoice;
-      });
+      const productChoice = mock.products
+        .filter((product) => (!selectedProduct ? true : !['# Pre-set #', '# Bundle #'].includes(product.category)))
+        .map((product) => {
+          return {
+            value: product,
+            label: product.name + ' - ' + product.brand,
+            group: product.category,
+            disable: product !== selectedProduct && selectedProducts.includes(product),
+          } as RegSelectChoice;
+        });
 
       this.products.push(productChoice);
     });

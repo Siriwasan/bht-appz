@@ -45,6 +45,7 @@ export class ProductsComponent implements OnInit {
         };
       })(Object.create(null))
     );
+    this.groupedProducts = this.groupedProducts.sort((a, b) => (a.group < b.group ? -1 : a.group > b.group ? 1 : 0));
   }
 
   private flattenGroupedProducts() {
