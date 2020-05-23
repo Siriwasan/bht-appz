@@ -71,6 +71,21 @@ export const products: Product[] = [
     status: 'In stock',
     updatedDateTime: '2020-03-21T18:20:00.000+07:00',
   },
+  {
+    id: 7,
+    name: 'Bundle 1',
+    description: null,
+    brand: 'BHT',
+    category: '# Bundle #',
+    subProducts: [
+      { productId: 3, quantity: 1 },
+      { productId: 5, quantity: 1 },
+    ],
+    thaiPrice: 300,
+    interPrice: 450,
+    status: 'In stock',
+    updatedDateTime: '2020-03-21T18:20:00.000+07:00',
+  },
 ];
 
 export const quotations: Quotation[] = [

@@ -6,6 +6,12 @@ reg-select-search {
   margin: 5px 10px;
 }
 
+reg-input {
+  ::ng-deep input:read-only {
+    color: #757575;
+  }
+}
+
 .quotation-form {
   background-color: white;
   padding: 20px 10px 5px 10px;

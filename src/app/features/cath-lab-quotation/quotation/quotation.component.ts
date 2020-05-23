@@ -75,6 +75,7 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.subscriptions.push(
       productFormGroup.get('product').valueChanges.subscribe((value: Product) => {
+        console.log('product changed');
         this.canAddUseProduct = true;
         if (value.category === '# Pre-set #') {
           this.addByPreSet(value);
@@ -82,22 +83,8 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
         this.generateProductList();
       }),
       productFormGroup.valueChanges.subscribe((value: ProductOrder) => {
-        if (value.product) {
-          const unitPrice = value.product.thaiPrice;
-          const quantity = value.quantity;
-          let price = '';
-
-          productFormGroup
-            .get('unitPrice')
-            .setValue(unitPrice.toLocaleString(undefined, { minimumFractionDigits: 2 }), { emitEvent: false });
-
-          if (productFormGroup.get('quantity').valid && value.quantity) {
-            price = (unitPrice * quantity).toLocaleString(undefined, { minimumFractionDigits: 2 });
-          }
-
-          productFormGroup.get('price').setValue(price, { emitEvent: false });
-        }
-
+        console.log(value);
+        this.checkBundleProduct();
         this.calculateUsePrice();
       })
     );
@@ -106,20 +93,29 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private calculateUsePrice() {
-    let usePrice = 0;
+    let sumUsePrice = 0;
     const useProducts = this.quotationForm.get('useProducts') as FormArray;
 
-    useProducts.controls.forEach((control: FormControl) => {
-      const product = control[`controls`][`product`];
-      const unitPrice = product.value ? product.value[`thaiPrice`] : 0;
-      const quantity = control[`controls`][`quantity`]?.value ?? 0;
+    useProducts.controls.forEach((control: FormGroup) => {
+      const productControl = control.get('product');
+      const quantityControl = control.get('quantity');
+      let unitPrice = null;
+      let price = null;
 
-      if (control[`controls`][`quantity`].valid) {
-        usePrice += unitPrice * quantity;
+      if (productControl.valid) {
+        unitPrice = productControl.value[`thaiPrice`];
+
+        if (quantityControl.valid) {
+          price = unitPrice * +quantityControl.value;
+
+          sumUsePrice += price;
+        }
       }
+      control.get('unitPrice').setValue(unitPrice?.toLocaleString(undefined, { minimumFractionDigits: 2 }), { emitEvent: false });
+      control.get('price').setValue(price?.toLocaleString(undefined, { minimumFractionDigits: 2 }), { emitEvent: false });
     });
 
-    this.quotationForm.get('usePrice').setValue(usePrice.toLocaleString(undefined, { minimumFractionDigits: 2 }));
+    this.quotationForm.get('usePrice').setValue(sumUsePrice.toLocaleString(undefined, { minimumFractionDigits: 2 }), { emitEvent: false });
 
     this.calculateEstimatedPrice();
   }
@@ -149,14 +145,14 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
 
         if (useProducts.value[index].product === product) {
           const newQuantity = +useProducts.value[index].quantity + quantity;
-          element.get('quantity').setValue(newQuantity);
+          element.get('quantity').setValue(newQuantity, { emitEvent: false });
           isDuplicated = true;
         }
       }
 
       if (!isDuplicated) {
-        useProductForm.get('product').setValue(product);
-        useProductForm.get('quantity').setValue(quantity);
+        useProductForm.get('product').setValue(product, { emitEvent: false });
+        useProductForm.get('quantity').setValue(quantity, { emitEvent: false });
         useProducts.push(useProductForm);
         this.canAddUseProduct = true;
       }
@@ -183,15 +179,17 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private addByPreSet(preSet: Product) {
-    console.log(preSet);
     const useProducts = this.quotationForm.get('useProducts') as FormArray;
 
     this.removeUseProduct(useProducts.controls.length - 1);
 
     preSet.subProducts.forEach((subProduct) => {
-      console.log(subProduct);
       this.addUseProducts(subProduct);
     });
+  }
+
+  private checkBundleProduct() {
+    console.log('check bundle product');
   }
 
   private generateProductList() {
@@ -201,15 +199,24 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
     const selectedProducts: Product[] = [];
 
     useProducts.controls.forEach((control: FormGroup) => {
-      const product = control.controls[`product`].value;
+      const product = control.get('product').value;
       selectedProducts.push(product);
     });
 
     useProducts.controls.forEach((control: FormGroup) => {
-      const selectedProduct = control.controls[`product`].value;
+      const selectedProduct = control.get('product').value;
 
       const productChoice = mock.products
-        .filter((product) => (!selectedProduct ? true : !['# Pre-set #', '# Bundle #'].includes(product.category)))
+        .filter((product) => {
+          if (!selectedProduct) {
+            return true;
+          } else if (product.category === '# Pre-set #') {
+            return false;
+          } else if (product.category === '# Bundle #' && product !== selectedProduct) {
+            return false;
+          }
+          return true;
+        })
         .map((product) => {
           return {
             value: product,
