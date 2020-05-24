@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, OnDestroy, AfterViewInit, AfterContentInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Product, ProductOrder } from '../cath-lab-quotation.model';
+import { Product, ProductOrder, SubProduct } from '../cath-lab-quotation.model';
 import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { RegSelectChoice } from 'src/app/shared/modules/registry-form/registry-form.model';
@@ -138,7 +138,7 @@ export class ProductComponent implements OnInit, OnDestroy, AfterViewInit, After
     }
   }
 
-  addSubProducts(subProduct?: { productId: number; quantity: number }) {
+  addSubProducts(subProduct?: SubProduct) {
     const subProducts = this.productForm.get('subProducts') as FormArray;
     const subProductForm = this.createSubProductSubForm();
 

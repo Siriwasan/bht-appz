@@ -4,6 +4,7 @@ import { QuotationComponent } from './quotation.component';
 import { Routes, RouterModule } from '@angular/router';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { RegistryFormModule } from 'src/app/shared/modules/registry-form/registry-form.module';
+import { BundlesDialogComponent } from './bundles-dialog/bundles-dialog.component';
 
 const routes: Routes = [
   {
@@ -17,7 +18,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [QuotationComponent],
+  declarations: [QuotationComponent, BundlesDialogComponent],
   imports: [CommonModule, SharedModule, RouterModule.forChild(routes), RegistryFormModule],
 })
 export class QuotationModule {}

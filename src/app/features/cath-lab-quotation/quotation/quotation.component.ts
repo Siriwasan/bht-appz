@@ -1,11 +1,13 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
-import { Quotation, ProductOrder, Product } from '../cath-lab-quotation.model';
+import { Quotation, ProductOrder, Product, SubProduct } from '../cath-lab-quotation.model';
 
 import * as mock from '../cath-lab-quotation.mock';
 import { RegSelectChoice } from 'src/app/shared/modules/registry-form/registry-form.model';
 import { Subscription } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { BundlesDialogComponent } from './bundles-dialog/bundles-dialog.component';
 
 @Component({
   selector: 'app-quotation',
@@ -23,7 +25,7 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   products: RegSelectChoice[][] = [];
 
-  constructor(private route: ActivatedRoute, private fb: FormBuilder) {
+  constructor(private route: ActivatedRoute, private fb: FormBuilder, private dialog: MatDialog) {
     this.createQuatationForm();
     this.addUseProducts();
 
@@ -131,7 +133,7 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
     this.quotationForm.get('estimatedPrice').setValue(estimatedPrice);
   }
 
-  addUseProducts(subProduct?: { productId: number; quantity: number }) {
+  addUseProducts(subProduct?: SubProduct) {
     const useProducts = this.quotationForm.get('useProducts') as FormArray;
     const useProductForm = this.createProductSubForm();
 
@@ -176,6 +178,7 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.calculateUsePrice();
     this.generateProductList();
+    this.checkBundleProduct();
   }
 
   private addByPreSet(preSet: Product) {
@@ -193,22 +196,22 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const useProductsControl = this.quotationForm.get('useProducts') as FormArray;
     const useProducts = useProductsControl.getRawValue().map((el) => {
-      return { product: el.product, quantity: el.quantity };
+      return { product: el.product, quantity: +el.quantity };
     });
     console.log(useProducts);
 
     const bundles = mock.products.filter((product) => product.category === '# Bundle #');
     console.log(bundles);
 
-    let matched = true;
-    const matchedBundle = [];
+    const matchedBundles = [];
 
     bundles.forEach((bundle) => {
+      let matched = true;
       bundle.subProducts.forEach((subProduct) => {
         let found = false;
 
         useProducts.forEach((useProduct) => {
-          if (subProduct.productId === useProduct.product.id && subProduct.quantity <= useProduct.quantity) {
+          if (useProduct.product && subProduct.productId === useProduct.product.id && subProduct.quantity <= useProduct.quantity) {
             found = true;
           }
         });
@@ -219,11 +222,44 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       });
       if (matched) {
-        matchedBundle.push(bundle);
+        matchedBundles.push(bundle);
       }
     });
 
-    console.log(matched ? 'matched' : 'not matched', matchedBundle);
+    console.log(matchedBundles.length > 0 ? 'matched' : 'not matched', matchedBundles);
+    if (matchedBundles.length > 0) {
+      this.askForBundles(matchedBundles);
+    }
+  }
+
+  private askForBundles(bundles: Product[]) {
+    const mappedBundles = bundles.map((bundle) => {
+      return {
+        ...bundle,
+        subProducts: bundle.subProducts.map((sub) => {
+          return {
+            ...sub,
+            product: mock.products.find((p) => p.id === sub.productId),
+          };
+        }),
+      };
+    });
+
+    this.dialog
+      .open(BundlesDialogComponent, {
+        width: 'auto',
+        disableClose: true,
+        autoFocus: true,
+        data: mappedBundles,
+      })
+      .afterClosed()
+      .subscribe((result: Product) => {
+        if (result) {
+          // this.products.push(result);
+          // this.groupingProducts();
+          // this.flattenGroupedProducts();
+        }
+      });
   }
 
   private generateProductList() {

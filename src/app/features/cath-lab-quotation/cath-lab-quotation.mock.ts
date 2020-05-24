@@ -100,7 +100,7 @@ export const products: Product[] = [
   },
   {
     id: 9,
-    name: 'Bundle 2',
+    name: 'Bundle 3',
     description: null,
     brand: 'BHT',
     category: '# Bundle #',

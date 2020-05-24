@@ -1,0 +1,21 @@
+.mat-dialog-container {
+  background-color: #fafafa;
+}
+
+.bundle-card {
+  margin: 15px;
+}
+
+.sub-product {
+  margin-left: 16px;
+  margin-right: 16px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 16px;
+
+  .header {
+    color: rgba(0, 0, 0, 0.54);
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+}

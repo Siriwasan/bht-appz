@@ -4,12 +4,17 @@ export interface Product {
   description: string;
   brand: string;
   category: string; // 'Stent', 'Wire', 'Balloon', '# Pre-set #', '# Bundle #'
-  subProducts?: { productId: number; quantity: number }[];
+  subProducts?: SubProduct[];
   thaiPrice: number;
   interPrice: number;
   status: string; // 'In stock', 'Discontinued', 'Postpone'
   note?: string;
   updatedDateTime: string;
+}
+
+export interface SubProduct {
+  productId: number;
+  quantity: number;
 }
 
 export interface ProductGroup {

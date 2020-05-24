@@ -1,0 +1,38 @@
+<div fxLayoutAlign="space-between center" style="margin-bottom: 16px;">
+  <h1 mat-dialog-title style="margin-bottom: 0;">Bundle(s) Available!!!</h1>
+  <button mat-icon-button color="warn" aria-label="Close" mat-dialog-close tabindex="-1">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<div mat-dialog-content style="min-width: 640px;">
+  <div *ngFor="let bundle of data">
+    <mat-card class="bundle-card mat-elevation-z4">
+      <mat-card-header>
+        <mat-card-title>{{ bundle.name }}</mat-card-title>
+        <mat-card-subtitle>Price: {{ bundle.thaiPrice }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p class="sub-product" *ngFor="let subProduct of bundle.subProducts">
+          <span fxFlex="50">
+            <span class="header">Product:</span>
+            <span>{{ subProduct.product.name }}</span>
+          </span>
+          <span fxFlex="30">
+            <span class="header">Brand:</span>
+            <span>{{ subProduct.product.brand }}</span>
+          </span>
+          <span fxFlex="20">
+            <span class="header">Quantity:</span>
+            <span>{{ subProduct.quantity }}</span>
+          </span>
+        </p>
+      </mat-card-content>
+      <mat-card-actions align="end">
+        <button mat-button mat-dialog-close>Select</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close cdkFocusInitial>Discard</button>
+</div>
