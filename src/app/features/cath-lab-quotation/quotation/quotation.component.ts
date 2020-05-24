@@ -28,8 +28,6 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private route: ActivatedRoute, private fb: FormBuilder, private dialog: MatDialog) {
     this.createQuatationForm();
     this.addUseProducts();
-
-    this.subscriptions.push(this.quotationForm.get('priceVariation').valueChanges.subscribe((value) => this.calculateEstimatedPrice()));
   }
 
   ngOnInit(): void {
@@ -65,6 +63,8 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
       quotedBy: [this.quotation.quotedBy, Validators.required],
       quotedDateTime: [this.quotation.quotedDateTime, Validators.required],
     });
+
+    this.subscriptions.push(this.quotationForm.get('priceVariation').valueChanges.subscribe((value) => this.calculateEstimatedPrice()));
   }
 
   private createProductSubForm() {
@@ -192,8 +192,6 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
   private async checkBundleProduct() {
     const useProductsControl = this.quotationForm.get('useProducts') as FormArray;
     const useProducts = useProductsControl.controls.map((control) => {
-      const product = control.get('product').valid;
-      const valid = control.valid;
       return {
         product: control.get('product').value,
         productValid: control.get('product').valid,
@@ -312,9 +310,10 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
             return true;
           } else if (product.category === '# Pre-set #') {
             return false;
-          } else if (product.category === '# Bundle #' && product !== selectedProduct) {
-            return false;
           }
+          // else if (product.category === '# Bundle #' && product !== selectedProduct) {
+          //   return false;
+          // }
           return true;
         })
         .map((product) => {

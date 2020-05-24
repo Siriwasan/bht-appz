@@ -13,7 +13,7 @@
 
     <div>
       <reg-textarea controlName="description" placeholder="Description" [formGroup]="productForm" type="text" fxFlex
-        [controlService]="controlService" [height]="'150px'" [require]="false"></reg-textarea>
+        [controlService]="controlService" [height]="'75px'" [require]="false"></reg-textarea>
     </div>
 
     <div>
@@ -73,9 +73,7 @@
 
       <reg-input controlName="interPrice" placeholder="Inter Price (฿)" [formGroup]="productForm" type="number" fxFlex
         [controlService]="controlService" [readonly]="isPreset"></reg-input>
-    </div>
 
-    <div>
       <reg-select controlName="status" placeholder="Status" [formGroup]="productForm" [choices]="[
         'In stock',
         'Discontinue',
@@ -86,7 +84,7 @@
 
     <div>
       <reg-textarea controlName="note" placeholder="Note" [formGroup]="productForm" type="text" fxFlex
-        [controlService]="controlService" [height]="'75px'" [require]="false"></reg-textarea>
+        [controlService]="controlService" [height]="'auto'" [require]="false"></reg-textarea>
     </div>
 
   </form>
@@ -95,5 +93,3 @@
   <button mat-button (click)="submit()" [disabled]="!productForm.valid">{{ addMode ? 'Create' : 'Update' }}</button>
   <button mat-button mat-dialog-close>Discard</button>
 </div>
-
-{{ productForm.value | json }}
