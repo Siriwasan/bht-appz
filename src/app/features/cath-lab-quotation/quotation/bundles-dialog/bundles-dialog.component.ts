@@ -11,4 +11,8 @@ export class BundlesDialogComponent implements OnInit {
   constructor(private dialogRef: MatDialogRef<BundlesDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any[]) {}
 
   ngOnInit(): void {}
+
+  selectClicked(bundle: any) {
+    this.dialogRef.close(bundle as Product);
+  }
 }

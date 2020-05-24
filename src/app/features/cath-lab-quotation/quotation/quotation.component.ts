@@ -77,7 +77,6 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.subscriptions.push(
       productFormGroup.get('product').valueChanges.subscribe((value: Product) => {
-        console.log('product changed');
         this.canAddUseProduct = true;
         if (value.category === '# Pre-set #') {
           this.addByPreSet(value);
@@ -85,7 +84,6 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
         this.generateProductList();
       }),
       productFormGroup.valueChanges.subscribe((value: ProductOrder) => {
-        // console.log(value);
         this.checkBundleProduct();
         this.calculateUsePrice();
       })
@@ -191,18 +189,20 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  private checkBundleProduct() {
-    console.log('check bundle product');
-
+  private async checkBundleProduct() {
     const useProductsControl = this.quotationForm.get('useProducts') as FormArray;
-    const useProducts = useProductsControl.getRawValue().map((el) => {
-      return { product: el.product, quantity: +el.quantity };
+    const useProducts = useProductsControl.controls.map((control) => {
+      const product = control.get('product').valid;
+      const valid = control.valid;
+      return {
+        product: control.get('product').value,
+        productValid: control.get('product').valid,
+        quantity: +control.get('quantity').value,
+        quantitytValid: control.get('quantity').valid,
+      };
     });
-    console.log(useProducts);
 
     const bundles = mock.products.filter((product) => product.category === '# Bundle #');
-    console.log(bundles);
-
     const matchedBundles = [];
 
     bundles.forEach((bundle) => {
@@ -211,7 +211,12 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
         let found = false;
 
         useProducts.forEach((useProduct) => {
-          if (useProduct.product && subProduct.productId === useProduct.product.id && subProduct.quantity <= useProduct.quantity) {
+          if (
+            useProduct.productValid &&
+            useProduct.quantitytValid &&
+            subProduct.productId === useProduct.product.id &&
+            subProduct.quantity <= useProduct.quantity
+          ) {
             found = true;
           }
         });
@@ -226,9 +231,11 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
 
-    console.log(matchedBundles.length > 0 ? 'matched' : 'not matched', matchedBundles);
     if (matchedBundles.length > 0) {
-      this.askForBundles(matchedBundles);
+      const selectedBundle = await this.askForBundles(matchedBundles);
+      if (selectedBundle) {
+        this.replaceWithBundle(selectedBundle);
+      }
     }
   }
 
@@ -245,7 +252,7 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
       };
     });
 
-    this.dialog
+    return this.dialog
       .open(BundlesDialogComponent, {
         width: 'auto',
         disableClose: true,
@@ -253,13 +260,36 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
         data: mappedBundles,
       })
       .afterClosed()
-      .subscribe((result: Product) => {
-        if (result) {
-          // this.products.push(result);
-          // this.groupingProducts();
-          // this.flattenGroupedProducts();
+      .toPromise<Product>();
+  }
+
+  private replaceWithBundle(bundle: Product) {
+    bundle.subProducts.forEach((subProduct) => {
+      const useProductsControl = this.quotationForm.get('useProducts') as FormArray;
+
+      for (let index = 0; index < useProductsControl.controls.length; index++) {
+        const control = useProductsControl.controls[index];
+
+        const product = control.get('product').value as Product;
+        if (product && product.id === subProduct.productId) {
+          let quantity = +control.get('quantity').value;
+          quantity -= subProduct.quantity;
+          if (quantity > 0) {
+            control.get('quantity').setValue(quantity);
+          } else {
+            useProductsControl.removeAt(index);
+          }
         }
-      });
+      }
+
+      if (
+        useProductsControl.controls.length > 0 &&
+        useProductsControl.controls[useProductsControl.controls.length - 1].value.product === null
+      ) {
+        useProductsControl.removeAt(useProductsControl.controls.length - 1);
+      }
+      this.addUseProducts({ productId: bundle.id, quantity: 1 });
+    });
   }
 
   private generateProductList() {
