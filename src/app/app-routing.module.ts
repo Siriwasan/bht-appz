@@ -22,12 +22,6 @@ const routes: Routes = [
         loadChildren: () => import('./features/home/home.module').then((m) => m.HomeModule),
       },
       {
-        path: 'registry',
-        loadChildren: () => import('./features/registry/registry.module').then((m) => m.RegistryModule),
-        // canActivate: [AuthRoleGuard],
-        // data: { roles: Auth.menus.registry }
-      },
-      {
         path: 'cath-lab-quotation',
         loadChildren: () => import('./features/cath-lab-quotation/cath-lab-quotation.module').then((m) => m.CathLabQuotationModule),
         // canActivate: [AuthRoleGuard],
