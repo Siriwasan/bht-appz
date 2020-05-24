@@ -83,7 +83,7 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
         this.generateProductList();
       }),
       productFormGroup.valueChanges.subscribe((value: ProductOrder) => {
-        console.log(value);
+        // console.log(value);
         this.checkBundleProduct();
         this.calculateUsePrice();
       })
@@ -190,6 +190,40 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private checkBundleProduct() {
     console.log('check bundle product');
+
+    const useProductsControl = this.quotationForm.get('useProducts') as FormArray;
+    const useProducts = useProductsControl.getRawValue().map((el) => {
+      return { product: el.product, quantity: el.quantity };
+    });
+    console.log(useProducts);
+
+    const bundles = mock.products.filter((product) => product.category === '# Bundle #');
+    console.log(bundles);
+
+    let matched = true;
+    const matchedBundle = [];
+
+    bundles.forEach((bundle) => {
+      bundle.subProducts.forEach((subProduct) => {
+        let found = false;
+
+        useProducts.forEach((useProduct) => {
+          if (subProduct.productId === useProduct.product.id && subProduct.quantity <= useProduct.quantity) {
+            found = true;
+          }
+        });
+
+        if (!found) {
+          matched = false;
+          return;
+        }
+      });
+      if (matched) {
+        matchedBundle.push(bundle);
+      }
+    });
+
+    console.log(matched ? 'matched' : 'not matched', matchedBundle);
   }
 
   private generateProductList() {
