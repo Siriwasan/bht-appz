@@ -46,7 +46,7 @@
     <div formArrayName="useProducts" *ngFor="let fg of quotationForm.get('useProducts')['controls']; let i = index;">
       <div fxLayoutAlign="center center">
 
-        <button mat-icon-button color="warn" aria-label="Close" (click)="removeUseProduct(i)">
+        <button mat-icon-button color="warn" aria-label="Close" (click)="removeProductSubform('useProducts', i)">
           <mat-icon>close</mat-icon>
         </button>
 
@@ -68,7 +68,7 @@
     </div>
     <div fxLayoutAlign="end center">
       <button style="margin-left: 10px; margin-right: 10px;" mat-stroked-button color="primary"
-        (click)="addUseProducts()" [disabled]="!canAddUseProduct" fxFlex>Add</button>
+        (click)="addProductSubform('useProducts')" [disabled]="!canAddProductSubform['useProducts']" fxFlex>Add</button>
       <h4 style="margin: 0">Use Price</h4>
       <reg-input controlName="usePrice" placeholder="Use Price" [formGroup]="quotationForm" type="text" fxFlex="14.5"
         [controlService]="controlService" [readonly]="true"></reg-input>
