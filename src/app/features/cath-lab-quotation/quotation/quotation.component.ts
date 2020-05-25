@@ -262,9 +262,8 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private replaceWithBundle(bundle: Product) {
+    const useProductsControl = this.quotationForm.get('useProducts') as FormArray;
     bundle.subProducts.forEach((subProduct) => {
-      const useProductsControl = this.quotationForm.get('useProducts') as FormArray;
-
       for (let index = 0; index < useProductsControl.controls.length; index++) {
         const control = useProductsControl.controls[index];
 
@@ -279,15 +278,16 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         }
       }
-
-      if (
-        useProductsControl.controls.length > 0 &&
-        useProductsControl.controls[useProductsControl.controls.length - 1].value.product === null
-      ) {
-        useProductsControl.removeAt(useProductsControl.controls.length - 1);
-      }
-      this.addUseProducts({ productId: bundle.id, quantity: 1 });
     });
+
+    if (
+      useProductsControl.controls.length > 0 &&
+      useProductsControl.controls[useProductsControl.controls.length - 1].value.product === null
+    ) {
+      useProductsControl.removeAt(useProductsControl.controls.length - 1);
+    }
+    console.log('add bundle');
+    this.addUseProducts({ productId: bundle.id, quantity: 1 });
   }
 
   private generateProductList() {
