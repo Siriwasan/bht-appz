@@ -20,14 +20,15 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   quotationForm: FormGroup;
   quotationId: string;
-  canAddProductSubform = { useProducts: false };
+  canAddProductSubform = { useProducts: false, backupProducts: false };
   private quotation = { priceVariation: 10 } as Quotation;
 
-  products: RegSelectChoice[][] = [];
+  products = { useProducts: [], backupProducts: [] };
 
   constructor(private route: ActivatedRoute, private fb: FormBuilder, private dialog: MatDialog) {
     this.createQuatationForm();
     this.addProductSubform('useProducts');
+    this.addProductSubform('backupProducts');
   }
 
   ngOnInit(): void {
@@ -55,8 +56,9 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
       physician: [this.quotation.physician, Validators.required],
       procedureDateTime: [this.quotation.procedureDateTime, Validators.required],
       useProducts: this.fb.array([]),
-      backupProducts: [this.quotation.backupProducts],
+      backupProducts: this.fb.array([]),
       usePrice: [this.quotation.usePrice, Validators.required],
+      backupPrice: [this.quotation.backupPrice],
       priceVariation: [this.quotation.priceVariation, Validators.required],
       estimatedPrice: [this.quotation.usePrice, Validators.required],
       note: [this.quotation.note],
@@ -122,6 +124,9 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.calculateEstimatedPrice();
     } else {
+      this.quotationForm
+        .get('backupPrice')
+        .setValue(sumUsePrice.toLocaleString(undefined, { minimumFractionDigits: 2 }), { emitEvent: false });
     }
   }
 
@@ -294,7 +299,7 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
   private generateProductList(formArray: string) {
     const productFormArray = this.quotationForm.get(formArray) as FormArray;
 
-    this.products = [];
+    this.products[formArray] = [];
     const selectedProducts: Product[] = [];
 
     productFormArray.controls.forEach((control: FormGroup) => {
@@ -325,7 +330,7 @@ export class QuotationComponent implements OnInit, AfterViewInit, OnDestroy {
           } as RegSelectChoice;
         });
 
-      this.products.push(productChoice);
+      this.products[formArray].push(productChoice);
     });
   }
 }

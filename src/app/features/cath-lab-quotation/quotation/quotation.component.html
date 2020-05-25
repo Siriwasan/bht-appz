@@ -41,7 +41,7 @@
       type="datetime" fxFlex>dd/mm/yyyy hh:mm</reg-datepicker>
   </div>
 
-  <fieldset class="fieldset-label">
+  <fieldset class="fieldset-label" style="background-color: honeydew;">
     <legend>Use Products</legend>
     <div formArrayName="useProducts" *ngFor="let fg of quotationForm.get('useProducts')['controls']; let i = index;">
       <div fxLayoutAlign="center center">
@@ -51,8 +51,9 @@
         </button>
 
         <div [formGroup]="fg" fxFlex>
-          <reg-select-search controlName="product" placeholder="Product" [formGroup]="fg" [choices]="products[i]" fxFlex
-            [nullOption]="false" [group]="true" sortChoice="asc" sortGroup="asc" [controlService]="controlService">
+          <reg-select-search controlName="product" placeholder="Product" [formGroup]="fg"
+            [choices]="products['useProducts'][i]" fxFlex [nullOption]="false" [group]="true" sortChoice="asc"
+            sortGroup="asc" [controlService]="controlService">
           </reg-select-search>
 
           <reg-input controlName="unitPrice" placeholder="Unit Price" [formGroup]="fg" type="text" fxFlex="15"
@@ -82,8 +83,42 @@
     </div>
   </fieldset>
 
-  <reg-input controlName="backupProducts" placeholder="Backup Products" [formGroup]="quotationForm" type="text" fxFlex
-    [require]="false" [controlService]="controlService"></reg-input>
+  <fieldset class="fieldset-label" style="background-color: rgb(255, 251, 236);">
+    <legend>Backup Products</legend>
+    <div formArrayName="backupProducts"
+      *ngFor="let fg of quotationForm.get('backupProducts')['controls']; let i = index;">
+      <div fxLayoutAlign="center center">
+
+        <button mat-icon-button color="warn" aria-label="Close" (click)="removeProductSubform('backupProducts', i)">
+          <mat-icon>close</mat-icon>
+        </button>
+
+        <div [formGroup]="fg" fxFlex>
+          <reg-select-search controlName="product" placeholder="Product" [formGroup]="fg"
+            [choices]="products['backupProducts'][i]" fxFlex [nullOption]="false" [group]="true" sortChoice="asc"
+            sortGroup="asc" [controlService]="controlService">
+          </reg-select-search>
+
+          <reg-input controlName="unitPrice" placeholder="Unit Price" [formGroup]="fg" type="text" fxFlex="15"
+            [controlService]="controlService" [readonly]="true"></reg-input>
+
+          <reg-input controlName="quantity" placeholder="Quantity" [formGroup]="fg" type="number" fxFlex="15"
+            [controlService]="controlService"></reg-input>
+
+          <reg-input controlName="price" placeholder="Price" [formGroup]="fg" type="text" fxFlex="15"
+            [controlService]="controlService" [readonly]="true"></reg-input>
+        </div>
+      </div>
+    </div>
+    <div fxLayoutAlign="end center">
+      <button style="margin-left: 10px; margin-right: 10px;" mat-stroked-button color="primary"
+        (click)="addProductSubform('backupProducts')" [disabled]="!canAddProductSubform['backupProducts']"
+        fxFlex>Add</button>
+      <h4 style="margin: 0">Backup Price</h4>
+      <reg-input controlName="backupPrice" placeholder="Backup Price" [formGroup]="quotationForm" type="text"
+        fxFlex="14.5" [controlService]="controlService" [readonly]="true"></reg-input>
+    </div>
+  </fieldset>
 
   <reg-textarea controlName="note" placeholder="Note" [formGroup]="quotationForm" type="text" fxFlex [require]="false"
     [controlService]="controlService" [height]="'auto'"></reg-textarea>

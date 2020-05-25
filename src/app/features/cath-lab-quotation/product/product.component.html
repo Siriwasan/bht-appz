@@ -30,7 +30,8 @@
       </reg-select>
     </div>
 
-    <fieldset class="fieldset-label" *ngIf="enableSubProducts">
+    <fieldset class="fieldset-label" [style.background-color]="isPreset ? 'aliceblue' : 'lavenderblush'"
+      *ngIf="enableSubProducts">
       <legend>Sub Products</legend>
       <div formArrayName="subProducts" *ngFor="let fg of productForm.get('subProducts')['controls']; let i = index;">
         <div fxLayoutAlign="center center">
