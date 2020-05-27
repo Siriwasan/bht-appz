@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 import * as mock from '../cath-lab-quotation.mock';
-import { ProductGroup, Product, GroupBy } from '../cath-lab-quotation.model';
-import { MatDialog } from '@angular/material/dialog';
+import { ProductGroup, Product, GroupBy, DB_PRODUCT } from '../cath-lab-quotation.model';
 import { ProductComponent } from '../product/product.component';
+import { FirestoreService } from 'src/app/shared/services/firestore.service';
+import { CathLabQuotationService } from '../cath-lab-quotation.service';
 
 @Component({
   selector: 'app-products',
@@ -20,7 +23,7 @@ export class ProductsComponent implements OnInit {
   displayedColumns: string[] = ['description', 'name', 'brand', 'category', 'thaiPrice', 'interPrice', 'status', 'updatedDateTime'];
   dataSource: MatTableDataSource<Product | GroupBy>;
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog, private afs: AngularFirestore, private quotationService: CathLabQuotationService) {}
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -104,10 +107,16 @@ export class ProductsComponent implements OnInit {
       .subscribe((result: Product) => {
         if (result) {
           this.products.push(result);
+          this.saveProduct(result);
 
           this.groupingProducts();
           this.flattenGroupedProducts();
         }
       });
+  }
+
+  saveProduct(product: Product) {
+    console.log('save');
+    this.quotationService.addProduct(product);
   }
 }

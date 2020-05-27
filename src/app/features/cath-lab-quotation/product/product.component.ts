@@ -27,7 +27,7 @@ export class ProductComponent implements OnInit, OnDestroy, AfterViewInit, After
   constructor(private dialogRef: MatDialogRef<ProductComponent>, @Inject(MAT_DIALOG_DATA) private data: Product, private fb: FormBuilder) {
     if (!data) {
       this.addMode = true;
-      this.product = { name: '(new)' } as Product;
+      this.product = {} as Product;
     } else {
       this.product = data;
     }
@@ -129,7 +129,7 @@ export class ProductComponent implements OnInit, OnDestroy, AfterViewInit, After
     console.log(data);
     this.productForm.patchValue(data);
 
-    this.removeSubProduct(0);
+    // this.removeSubProduct(0);
 
     if (data.subProducts?.length > 0) {
       data.subProducts.forEach((subProduct) => {
@@ -244,9 +244,9 @@ export class ProductComponent implements OnInit, OnDestroy, AfterViewInit, After
   }
 
   private getSubProducts() {
-    const subProducts = this.productForm.get('subProducts') as FormArray;
+    const subProductFormArray = this.productForm.get('subProducts') as FormArray;
 
-    return subProducts.controls.map((control: FormGroup) => {
+    const subProducts = subProductFormArray.controls.map((control: FormGroup) => {
       const product = control.controls[`product`].value as Product;
       const quan = control.controls[`quantity`].value;
       return {
@@ -254,5 +254,7 @@ export class ProductComponent implements OnInit, OnDestroy, AfterViewInit, After
         quantity: quan,
       };
     });
+
+    return subProducts.length > 0 ? subProducts : null;
   }
 }

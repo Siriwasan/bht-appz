@@ -1,3 +1,6 @@
+export const DB_PRODUCT = 'clq-Product';
+export const DB_QUOTATION = 'clq-Quotation';
+
 export interface Product {
   id: number;
   name: string;
