@@ -3,10 +3,10 @@
 <form [formGroup]="quotationForm" fxLayout="column" class="quotation-form mat-elevation-z2">
   <div>
     <reg-input controlName="hn" placeholder="HN" [formGroup]="quotationForm" type="text" fxFlex
-      [controlService]="controlService"></reg-input>
+      [controlService]="controlService">01XXXXXXXX</reg-input>
 
     <reg-input controlName="an" placeholder="AN" [formGroup]="quotationForm" type="text" fxFlex
-      [controlService]="controlService"></reg-input>
+      [controlService]="controlService">I01XXXXXXXXX</reg-input>
 
     <reg-select controlName="payment" placeholder="Payment" [formGroup]="quotationForm" [choices]="[
       'Thai',
@@ -140,8 +140,8 @@
   <button mat-raised-button style="margin: 10px">Discard</button>
 </div>
 
-{{ quotationForm.value | json }}
+<!-- {{ quotationForm.value | json }}
 
 <br>
 <br>
-<br>
+<br> -->

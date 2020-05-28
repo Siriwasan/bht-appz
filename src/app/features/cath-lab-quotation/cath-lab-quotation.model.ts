@@ -1,5 +1,5 @@
 export interface Product {
-  id?: number;
+  id?: string;
   name: string;
   description: string;
   brand: string;
@@ -14,7 +14,7 @@ export interface Product {
 }
 
 export interface SubProduct {
-  productId: number;
+  productId: string;
   quantity: number;
 }
 

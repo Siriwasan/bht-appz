@@ -14,7 +14,7 @@ import 'firebase/firestore';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/store/root-store.state';
 import { ClqStoreSelectors } from 'src/app/store/cath-lab-quotation';
-import { quotations } from 'src/app/store/cath-lab-quotation/cath-lab-quotation.selector';
+import * as deepDiff from 'deep-diff';
 
 @Component({
   selector: 'app-quotation',
@@ -25,7 +25,7 @@ export class QuotationComponent implements OnInit, AfterContentInit, AfterViewIn
   controlService = null;
   private subscriptions: Subscription[] = [];
 
-  products: Product[];
+  products: Product[] = [];
   quotationForm: FormGroup;
   quotationId: string;
   canAddProductSubform = { useProducts: true, backupProducts: true };
@@ -55,7 +55,8 @@ export class QuotationComponent implements OnInit, AfterContentInit, AfterViewIn
       });
     } else {
       this.addMode = true;
-      this.quotation = { priceVariation: 10 } as Quotation;
+      this.quotation = { priceVariation: 10, usePrice: 0, backupPrice: 0 } as Quotation;
+      this.loadQuotationForm(this.quotation);
     }
   }
 
@@ -64,6 +65,7 @@ export class QuotationComponent implements OnInit, AfterContentInit, AfterViewIn
       this.store.select(ClqStoreSelectors.products).subscribe((products) => {
         this.products = products;
         this.generateProductList('useProducts');
+        this.generateProductList('backupProducts');
       })
     );
   }
@@ -130,23 +132,40 @@ export class QuotationComponent implements OnInit, AfterContentInit, AfterViewIn
   }
 
   private loadQuotationForm(data: Quotation) {
-    console.log(data);
     if (data) {
       this.quotationForm.patchValue({
         ...data,
-        birthdate: moment(data.birthdate.toDate()),
-        procedureDateTime: moment(data.procedureDateTime.toDate()),
-        createdAt: moment(data.createdAt?.toDate()).format('DD/MM/YYYY H:mm'),
-        updatedAt: moment(data.updatedAt?.toDate()).format('DD/MM/YYYY H:mm'),
+        usePrice: data.usePrice?.toString(),
+        backupPrice: data.backupPrice?.toString(),
+        priceVariation: data.priceVariation?.toString(),
+        birthdate: data.birthdate ? moment(data.birthdate.toDate()) : null,
+        procedureDateTime: data.procedureDateTime ? moment(data.procedureDateTime.toDate()) : null,
+        createdAt: data.createdAt ? moment(data.createdAt.toDate()).format('DD/MM/YYYY H:mm') : null,
+        updatedAt: data.updatedAt ? moment(data.updatedAt.toDate()).format('DD/MM/YYYY H:mm') : null,
       });
     }
 
-    // if (data.useProducts?.length > 0) {
-    //   this.removeProductSubform('useProducts', 0);
-    //   data.useProducts.forEach((useProduct) => {
-    //     this.addProductSubform('useProducts', useProduct);
-    //   });
-    // }
+    if (data?.useProducts?.length > 0) {
+      const useProductsFormArray = this.quotationForm.get('useProducts') as FormArray;
+      for (let index = useProductsFormArray.controls.length - 1; index >= 0; index--) {
+        useProductsFormArray.removeAt(index);
+      }
+
+      data.useProducts.forEach((useProduct) => {
+        this.addProductSubform('useProducts', useProduct);
+      });
+    }
+
+    if (data?.backupProducts?.length > 0) {
+      const backupProductsFormArray = this.quotationForm.get('backupProducts') as FormArray;
+      for (let index = backupProductsFormArray.controls.length - 1; index >= 0; index--) {
+        backupProductsFormArray.removeAt(index);
+      }
+
+      data.backupProducts.forEach((backupProduct) => {
+        this.addProductSubform('backupProducts', backupProduct);
+      });
+    }
   }
 
   private calculateAge(birthdate: string) {
@@ -208,13 +227,22 @@ export class QuotationComponent implements OnInit, AfterContentInit, AfterViewIn
     this.quotationForm.get('estimatedPrice').setValue(estimatedPrice);
   }
 
-  addProductSubform(formArray: string, subProduct?: SubProduct) {
+  createProductOrder(subProduct: SubProduct): ProductOrder {
+    const prod = this.products.find((p) => p.id === subProduct.productId);
+    const quan = subProduct.quantity;
+    return {
+      product: prod,
+      quantity: quan,
+    };
+  }
+
+  addProductSubform(formArray: string, productOrder?: ProductOrder) {
     const productFormArray = this.quotationForm.get(formArray) as FormArray;
     const productSubform = this.createProductSubform(formArray);
 
-    if (subProduct) {
-      const product = this.products.find((p) => p.id === subProduct.productId);
-      const quantity = subProduct.quantity;
+    if (productOrder) {
+      const product = productOrder.product;
+      const quantity = productOrder.quantity;
       let isDuplicated = false;
 
       for (let index = 0; index < productFormArray.controls.length; index++) {
@@ -262,7 +290,7 @@ export class QuotationComponent implements OnInit, AfterContentInit, AfterViewIn
     this.removeProductSubform(formArray, productFormArray.controls.length - 1);
 
     preSet.subProducts.forEach((subProduct) => {
-      this.addProductSubform(formArray, subProduct);
+      this.addProductSubform(formArray, this.createProductOrder(subProduct));
     });
   }
 
@@ -360,7 +388,7 @@ export class QuotationComponent implements OnInit, AfterContentInit, AfterViewIn
     if (productFormArray.controls.length > 0 && productFormArray.controls[productFormArray.controls.length - 1].value.product === null) {
       productFormArray.removeAt(productFormArray.controls.length - 1);
     }
-    this.addProductSubform(formArray, { productId: bundle.id, quantity: 1 });
+    this.addProductSubform(formArray, this.createProductOrder({ productId: bundle.id, quantity: 1 }));
   }
 
   private generateProductList(formArray: string) {
@@ -375,10 +403,10 @@ export class QuotationComponent implements OnInit, AfterContentInit, AfterViewIn
     });
 
     productFormArray.controls.forEach((control: FormGroup) => {
-      const selectedProduct = control.get('product').value;
+      const selectedProduct = control.get('product').value as Product;
 
       const productChoice = this.products
-        ?.filter((product) => {
+        .filter((product) => {
           if (!selectedProduct) {
             return true;
           } else if (product.category === '# Pre-set #') {
@@ -397,12 +425,31 @@ export class QuotationComponent implements OnInit, AfterContentInit, AfterViewIn
           } as RegSelectChoice;
         });
 
+      // compare loaded data with present data
+      const result = this.products.find((product) => product.id === selectedProduct?.id);
+      if (result) {
+        const diffs = deepDiff.diff(result, selectedProduct);
+
+        if (!diffs) {
+          console.log('load form Firebase:Not different');
+          control.get('product').setValue(result, { emitEvent: false });
+        } else {
+          const legacy = {
+            value: selectedProduct,
+            label: selectedProduct.name + ' - ' + selectedProduct.brand + ' [OUT OF DATE]',
+            group: '# Legacy #',
+            disable: false,
+          } as RegSelectChoice;
+          productChoice.push(legacy);
+        }
+      }
+
       this.productList[formArray].push(productChoice);
     });
   }
 
   submit() {
-    const value = this.quotationForm.getRawValue();
+    const value = this.quotationForm.value;
     const quotation: Quotation = {
       id: value.id,
       hn: value.hn ? value.hn.trim() : null,
@@ -414,11 +461,11 @@ export class QuotationComponent implements OnInit, AfterContentInit, AfterViewIn
       physician: value.physician,
       procedure: value.procedure,
       procedureDateTime: firebase.firestore.Timestamp.fromDate(moment(value.procedureDateTime).toDate()),
-      useProducts: this.getUseProducts(),
-      usePrice: value.usePrice,
-      backupProducts: this.getBackupProducts(),
-      backupPrice: value.backupPrice,
-      priceVariation: +value.priceVariation,
+      useProducts: this.getProductSubform('useProducts'),
+      usePrice: +value.usePrice?.replace(',', ''),
+      backupProducts: this.getProductSubform('backupProducts'),
+      backupPrice: +value.backupPrice?.replace(',', ''),
+      priceVariation: +value.priceVariation.replace(',', ''),
       estimatedPrice: value.estimatedPrice,
       note: value.note,
       quotedBy: value.quotedBy ? value.quotedBy.trim() : null,
@@ -433,11 +480,18 @@ export class QuotationComponent implements OnInit, AfterContentInit, AfterViewIn
     }
   }
 
-  getUseProducts() {
-    return [];
-  }
+  getProductSubform(formArray: string) {
+    const productFormArray = this.quotationForm.get(formArray) as FormArray;
 
-  getBackupProducts() {
-    return [];
+    const products = productFormArray.controls.map((control: FormGroup) => {
+      const prod = control.controls[`product`].value as Product;
+      const quan = control.controls[`quantity`].value;
+      return {
+        product: prod,
+        quantity: quan,
+      } as ProductOrder;
+    });
+
+    return products;
   }
 }

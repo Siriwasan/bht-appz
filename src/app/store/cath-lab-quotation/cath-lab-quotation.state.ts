@@ -6,6 +6,6 @@ export interface State {
 }
 
 export const initialState: State = {
-  products: null,
-  quotations: null,
+  products: [],
+  quotations: [],
 };
