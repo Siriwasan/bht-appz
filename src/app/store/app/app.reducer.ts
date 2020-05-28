@@ -11,10 +11,6 @@ import {
   openNavbar,
   toggleNavbar,
   closeNavbar,
-  setSidebarMode,
-  openSidebar,
-  toggleSidebar,
-  closeSidebar,
 } from './app.actions';
 import { initialState } from './app.state';
 
@@ -66,8 +62,6 @@ export const appReducer = createReducer(
       ...state,
       navbarMode: nbMode,
       navbarOpened: nbOpened,
-      sidebarMode: sbMode,
-      sidebarOpened: sbOpened,
     };
   }),
 
@@ -82,34 +76,12 @@ export const appReducer = createReducer(
     return {
       ...state,
       navbarOpened: !state.navbarOpened,
-      sidebarOpened: state.sidebarMode === 'over' ? false : state.sidebarOpened,
     };
   }),
   on(closeNavbar, (state) => {
     return {
       ...state,
       navbarOpened: state.navbarMode === 'over' ? false : state.navbarOpened,
-    };
-  }),
-
-  // Sidebar
-  on(setSidebarMode, (state, { mode }) => {
-    return { ...state, sidebarMode: mode };
-  }),
-  on(openSidebar, (state, { open }) => {
-    return { ...state, sidebarOpened: open };
-  }),
-  on(toggleSidebar, (state) => {
-    return {
-      ...state,
-      sidebarOpened: !state.sidebarOpened,
-      navbarOpened: state.navbarMode === 'over' ? false : state.navbarOpened,
-    };
-  }),
-  on(closeSidebar, (state) => {
-    return {
-      ...state,
-      sidebarOpened: state.sidebarMode === 'over' ? false : state.sidebarOpened,
     };
   })
 );

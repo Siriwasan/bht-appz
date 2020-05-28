@@ -1,8 +1,5 @@
-export const DB_PRODUCT = 'clq-Product';
-export const DB_QUOTATION = 'clq-Quotation';
-
 export interface Product {
-  id: number;
+  id?: number;
   name: string;
   description: string;
   brand: string;
@@ -12,7 +9,8 @@ export interface Product {
   interPrice: number;
   status: string; // 'In stock', 'Discontinued', 'Postpone'
   note?: string;
-  updatedDateTime: string;
+  createdAt?: firebase.firestore.Timestamp;
+  updatedAt?: firebase.firestore.Timestamp;
 }
 
 export interface SubProduct {
@@ -42,12 +40,12 @@ export interface Quotation {
   hn: string;
   an: string;
   patient: string;
-  birthdate: string;
+  birthdate: firebase.firestore.Timestamp;
   age: number;
   payment: string;
   physician: string;
   procedure: string;
-  procedureDateTime: string;
+  procedureDateTime: firebase.firestore.Timestamp;
   useProducts: ProductOrder[];
   usePrice: number;
   backupProducts?: ProductOrder[];
@@ -56,5 +54,6 @@ export interface Quotation {
   estimatedPrice: string;
   note?: string;
   quotedBy: string;
-  quotedDateTime: string;
+  createdAt?: firebase.firestore.Timestamp;
+  updatedAt?: firebase.firestore.Timestamp;
 }

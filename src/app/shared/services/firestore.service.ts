@@ -46,7 +46,7 @@ export class FirestoreService {
       );
   }
 
-  colWithIds$<T>(ref: CollectionPredicate<T>, queryFn?): Observable<any[]> {
+  colWithIds$<T>(ref: CollectionPredicate<T>, queryFn?): Observable<T[]> {
     return this.col(ref, queryFn)
       .snapshotChanges()
       .pipe(
@@ -54,7 +54,7 @@ export class FirestoreService {
           return actions.map((a) => {
             const data = a.payload.doc.data();
             const id = a.payload.doc.id;
-            return { id, ...data };
+            return { ...data, id };
           });
         })
       );
@@ -73,8 +73,13 @@ export class FirestoreService {
     return this.afs.createId();
   }
 
+  geopoint(lat: number, lng: number) {
+    return new firebase.firestore.GeoPoint(lat, lng);
+  }
+
   add<T>(ref: CollectionPredicate<T>, data: any) {
     const timestamp = this.timestamp;
+    delete data.id;
     return this.col(ref).add({
       ...data,
       updatedAt: timestamp,
@@ -84,6 +89,7 @@ export class FirestoreService {
 
   set<T>(ref: DocPredicate<T>, data: any) {
     const timestamp = this.timestamp;
+    delete data.id;
     return this.doc(ref).set({
       ...data,
       updatedAt: timestamp,
@@ -91,8 +97,18 @@ export class FirestoreService {
     });
   }
 
-  geopoint(lat: number, lng: number) {
-    return new firebase.firestore.GeoPoint(lat, lng);
+  update<T>(ref: DocPredicate<T>, data: any) {
+    const timestamp = this.timestamp;
+    delete data.id;
+    return this.doc(ref).update({
+      ...data,
+      updatedAt: timestamp,
+    });
+  }
+
+  delete<T>(ref: DocPredicate<T>, data: any) {
+    const timestamp = this.timestamp;
+    return this.doc(ref).delete();
   }
 }
 

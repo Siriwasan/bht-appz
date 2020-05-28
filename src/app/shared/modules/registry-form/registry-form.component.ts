@@ -1,12 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  OnInit,
-  ElementRef,
-  HostListener,
-  OnDestroy,
-  AfterContentInit,
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, OnInit, ElementRef, HostListener, OnDestroy, AfterContentInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 
@@ -37,17 +29,7 @@ export class RegistryFormComponent implements OnInit, AfterViewInit, AfterConten
   ) {}
 
   ngOnInit() {
-    this.subscription.push(
-      this.store
-        .select(AppStoreSelectors.device)
-        .subscribe((newDevice) => (this.device = newDevice)),
-      this.store
-        .select(AppStoreSelectors.sidebarMode)
-        .subscribe((mode) => (this.sidebarMode = mode)),
-      this.store
-        .select(AppStoreSelectors.sidebarOpened)
-        .subscribe((open) => (this.sidebarOpened = open))
-    );
+    this.subscription.push(this.store.select(AppStoreSelectors.device).subscribe((newDevice) => (this.device = newDevice)));
     setTimeout(() => this.store.dispatch(AppStoreActions.initializeLayout()), 0);
   }
 
@@ -55,12 +37,10 @@ export class RegistryFormComponent implements OnInit, AfterViewInit, AfterConten
     this.initializeScrollSpy();
     this.listener = () => this.calculatTocMaxHeight();
     this.scrollTarget.addEventListener('scroll', this.listener, false);
-    this.currentSectionSubscription = this.scrollSpy
-      .getCurrentSection$()
-      .subscribe((currentSection: string): void => {
-        this.currentSection = currentSection;
-        this.changeDetector.markForCheck();
-      });
+    this.currentSectionSubscription = this.scrollSpy.getCurrentSection$().subscribe((currentSection: string): void => {
+      this.currentSection = currentSection;
+      this.changeDetector.markForCheck();
+    });
   }
 
   ngAfterContentInit() {
@@ -111,20 +91,11 @@ export class RegistryFormComponent implements OnInit, AfterViewInit, AfterConten
     this.completionContent = cutOffHeight > 550;
     const completionContainerHeight = (this.completionContent ? 250 : 70) - 32;
 
-    this.tocMaxHeight = (
-      document.body.scrollHeight -
-      window.pageYOffset -
-      this.tocMaxHeightOffset -
-      completionContainerHeight
-    ).toFixed(2);
+    this.tocMaxHeight = (document.body.scrollHeight - window.pageYOffset - this.tocMaxHeightOffset - completionContainerHeight).toFixed(2);
   }
 
   public isActive(section: string): boolean {
     return this.currentSection === section;
-  }
-
-  closeSidebar() {
-    this.store.dispatch(AppStoreActions.closeSidebar());
   }
 
   scrollTo(id: string) {
@@ -135,8 +106,6 @@ export class RegistryFormComponent implements OnInit, AfterViewInit, AfterConten
     setTimeout(() => {
       this.scrollSpy.scrollTo(toc);
     }, 0);
-
-    this.store.dispatch(AppStoreActions.closeSidebar());
   }
 
   //#region Warning before leaving

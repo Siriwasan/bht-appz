@@ -14,8 +14,6 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
   device = 'others';
   navbarMode = 'side';
   navbarOpened = true;
-  sidebarMode: string;
-  sidebarOpened: boolean;
   private subscription: Subscription[] = [];
 
   fillerContent = Array.from(
@@ -32,19 +30,9 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscription.push(
-      this.store
-        .select(AppStoreSelectors.device)
-        .subscribe((newDevice) => (this.device = newDevice)),
+      this.store.select(AppStoreSelectors.device).subscribe((newDevice) => (this.device = newDevice)),
       this.store.select(AppStoreSelectors.navbarMode).subscribe((mode) => (this.navbarMode = mode)),
-      this.store
-        .select(AppStoreSelectors.navbarOpened)
-        .subscribe((open) => (this.navbarOpened = open)),
-      this.store
-        .select(AppStoreSelectors.sidebarMode)
-        .subscribe((mode) => (this.sidebarMode = mode)),
-      this.store
-        .select(AppStoreSelectors.sidebarOpened)
-        .subscribe((open) => (this.sidebarOpened = open))
+      this.store.select(AppStoreSelectors.navbarOpened).subscribe((open) => (this.navbarOpened = open))
     );
   }
 
@@ -80,16 +68,10 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
         if (this.navbarMode === 'over' && this.navbarOpened) {
           this.store.dispatch(AppStoreActions.closeNavbar());
           touchEnd();
-        } else if (this.sidebarMode === 'over') {
-          this.store.dispatch(AppStoreActions.openSidebar());
-          touchEnd();
         }
       } else if (diffX < 0 && diffX < -thresholdX) {
         // console.log('swiped right');
-        if (this.sidebarMode === 'over' && this.sidebarOpened) {
-          this.store.dispatch(AppStoreActions.closeSidebar());
-          touchEnd();
-        } else if (this.navbarMode === 'over') {
+        if (this.navbarMode === 'over') {
           this.store.dispatch(AppStoreActions.openNavbar());
           touchEnd();
         }
@@ -103,11 +85,7 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
 
     if (
       (this.navbarMode === 'over' && !this.navbarOpened && initialX <= thresholdMarginX) ||
-      (this.sidebarMode === 'over' &&
-        !this.sidebarOpened &&
-        initialX >= event.view.outerWidth - thresholdMarginX) ||
-      (this.navbarMode === 'over' && this.navbarOpened) ||
-      (this.sidebarMode === 'over' && this.sidebarOpened)
+      (this.navbarMode === 'over' && this.navbarOpened)
     ) {
       // console.log('Register touch');
       touchStart();

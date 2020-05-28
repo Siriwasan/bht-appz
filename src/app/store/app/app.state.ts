@@ -4,8 +4,6 @@ export interface State {
   device: string;
   navbarMode: string;
   navbarOpened: boolean;
-  sidebarMode: string;
-  sidebarOpened: boolean;
 }
 
 export const initialState: State = {
@@ -14,6 +12,4 @@ export const initialState: State = {
   device: 'others',
   navbarMode: 'side',
   navbarOpened: true,
-  sidebarMode: 'side',
-  sidebarOpened: true,
 };

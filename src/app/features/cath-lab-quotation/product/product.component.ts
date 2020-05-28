@@ -5,8 +5,10 @@ import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@ang
 import { Subscription } from 'rxjs';
 import { RegSelectChoice } from 'src/app/shared/modules/registry-form/registry-form.model';
 
-import * as mock from '../cath-lab-quotation.mock';
 import { startWith, pairwise } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/store/root-store.state';
+import { ClqStoreSelectors } from 'src/app/store/cath-lab-quotation';
 
 @Component({
   selector: 'app-product',
@@ -17,6 +19,7 @@ export class ProductComponent implements OnInit, OnDestroy, AfterViewInit, After
   controlService = null;
   productForm: FormGroup;
   addMode = false;
+  products: Product[];
   subProducts: RegSelectChoice[][] = [];
   enableSubProducts: boolean;
   private subscriptions: Subscription[] = [];
@@ -24,7 +27,12 @@ export class ProductComponent implements OnInit, OnDestroy, AfterViewInit, After
   canAddSubProduct = true;
   isPreset = false;
 
-  constructor(private dialogRef: MatDialogRef<ProductComponent>, @Inject(MAT_DIALOG_DATA) private data: Product, private fb: FormBuilder) {
+  constructor(
+    private dialogRef: MatDialogRef<ProductComponent>,
+    @Inject(MAT_DIALOG_DATA) private data: Product,
+    private fb: FormBuilder,
+    private store: Store<AppState>
+  ) {
     if (!data) {
       this.addMode = true;
       this.product = {} as Product;
@@ -32,6 +40,12 @@ export class ProductComponent implements OnInit, OnDestroy, AfterViewInit, After
       this.product = data;
     }
     this.createProductForm(data);
+
+    this.subscriptions.push(
+      this.store.select(ClqStoreSelectors.products).subscribe((products) => {
+        this.products = products;
+      })
+    );
   }
 
   ngOnInit(): void {}
@@ -101,15 +115,12 @@ export class ProductComponent implements OnInit, OnDestroy, AfterViewInit, After
 
     this.subscriptions.push(
       subProductFormGroup.get('product').valueChanges.subscribe((value) => {
-        console.log('product changed');
         this.canAddSubProduct = true;
         this.generateProductList();
       }),
       subProductFormGroup.valueChanges.subscribe((value: ProductOrder) => {
         let thaiPrice = null;
         let interPrice = null;
-
-        console.log('form changed');
 
         if (subProductFormGroup.get('product').valid && subProductFormGroup.get('quantity').valid) {
           thaiPrice = (value.product.thaiPrice * value.quantity).toLocaleString(undefined, { minimumFractionDigits: 2 });
@@ -129,9 +140,8 @@ export class ProductComponent implements OnInit, OnDestroy, AfterViewInit, After
     console.log(data);
     this.productForm.patchValue(data);
 
-    // this.removeSubProduct(0);
-
     if (data.subProducts?.length > 0) {
+      this.removeSubProduct(0);
       data.subProducts.forEach((subProduct) => {
         this.addSubProducts(subProduct);
       });
@@ -146,7 +156,7 @@ export class ProductComponent implements OnInit, OnDestroy, AfterViewInit, After
     this.canAddSubProduct = false;
 
     if (subProduct) {
-      const product = mock.products.find((p) => p.id === subProduct.productId);
+      const product = this.products.find((p) => p.id === subProduct.productId);
       const quantity = subProduct.quantity;
 
       subProductForm.get('product').setValue(product);
@@ -183,7 +193,7 @@ export class ProductComponent implements OnInit, OnDestroy, AfterViewInit, After
     subProducts.controls.forEach((control: FormGroup) => {
       const selectedProduct = control.controls[`product`].value;
 
-      const productChoice = mock.products
+      const productChoice = this.products
         .filter((product) => !['# Pre-set #', '# Bundle #'].includes(product.category))
         .map((product) => {
           return {
@@ -238,7 +248,8 @@ export class ProductComponent implements OnInit, OnDestroy, AfterViewInit, After
       interPrice: value.interPrice,
       status: value.status,
       note: value.note ? value.note.trim() : null,
-      updatedDateTime: new Date().toISOString(),
+      createdAt: this.product.createdAt,
+      updatedAt: this.product.updatedAt,
     };
     this.dialogRef.close(product);
   }
@@ -255,6 +266,6 @@ export class ProductComponent implements OnInit, OnDestroy, AfterViewInit, After
       };
     });
 
-    return subProducts.length > 0 ? subProducts : null;
+    return subProducts;
   }
 }

@@ -10,7 +10,6 @@ export const products: Product[] = [
     thaiPrice: 1000,
     interPrice: 1500,
     status: 'In stock',
-    updatedDateTime: '2020-03-21T18:20:00.000+07:00',
   },
   {
     id: 2,
@@ -21,7 +20,6 @@ export const products: Product[] = [
     thaiPrice: 100,
     interPrice: 150,
     status: 'In stock',
-    updatedDateTime: '2020-03-21T18:20:00.000+07:00',
   },
   {
     id: 3,
@@ -32,7 +30,6 @@ export const products: Product[] = [
     thaiPrice: 2000,
     interPrice: 3000,
     status: 'Discontinue',
-    updatedDateTime: '2020-03-21T18:20:00.000+07:00',
   },
   {
     id: 4,
@@ -43,7 +40,6 @@ export const products: Product[] = [
     thaiPrice: 3000,
     interPrice: 4500,
     status: 'In stock',
-    updatedDateTime: '2020-03-21T18:20:00.000+07:00',
   },
   {
     id: 5,
@@ -54,7 +50,6 @@ export const products: Product[] = [
     thaiPrice: 300,
     interPrice: 450,
     status: 'Postpone',
-    updatedDateTime: '2020-03-21T18:20:00.000+07:00',
   },
   {
     id: 6,
@@ -69,7 +64,6 @@ export const products: Product[] = [
     thaiPrice: 300,
     interPrice: 450,
     status: 'In stock',
-    updatedDateTime: '2020-03-21T18:20:00.000+07:00',
   },
   {
     id: 7,
@@ -84,7 +78,6 @@ export const products: Product[] = [
     thaiPrice: 300,
     interPrice: 450,
     status: 'In stock',
-    updatedDateTime: '2020-03-21T18:20:00.000+07:00',
   },
   {
     id: 8,
@@ -96,7 +89,6 @@ export const products: Product[] = [
     thaiPrice: 1000,
     interPrice: 1500,
     status: 'In stock',
-    updatedDateTime: '2020-03-21T18:20:00.000+07:00',
   },
   {
     id: 9,
@@ -108,7 +100,6 @@ export const products: Product[] = [
     thaiPrice: 1500,
     interPrice: 1800,
     status: 'In stock',
-    updatedDateTime: '2020-03-21T18:20:00.000+07:00',
   },
 ];
 
@@ -118,12 +109,12 @@ export const quotations: Quotation[] = [
     hn: '0119043704',
     an: '01190015737',
     patient: 'Mr. Alexio Lemmer',
-    birthdate: '1980-03-21T18:20:00.000+07:00',
+    birthdate: null,
     age: 40,
     payment: 'thai',
     physician: 'นพ.ดำรัส ตรีสุโกศล',
     procedure: 'CAG',
-    procedureDateTime: '2020-03-21T11:20:00.000+07:00',
+    procedureDateTime: null,
     useProducts: [
       { product: products[0], quantity: 1 },
       { product: products[1], quantity: 1 },
@@ -133,19 +124,18 @@ export const quotations: Quotation[] = [
     priceVariation: 10,
     estimatedPrice: '',
     quotedBy: 'คุณ อริย์ธัช',
-    quotedDateTime: '2020-03-21T11:30:00.000+07:00',
   },
   {
     id: '01200002',
     hn: '0119234204',
     an: '01193423457',
     patient: 'Ms. Charyl Vasilyonok',
-    birthdate: '1970-03-21T18:20:00.000+07:00',
+    birthdate: null,
     age: 50,
     payment: 'inter',
     physician: 'นพ.ดำรัส ตรีสุโกศล',
     procedure: 'CAG + PCI',
-    procedureDateTime: '2020-03-25T15:00:00.000+07:00',
+    procedureDateTime: null,
     useProducts: [
       { product: products[0], quantity: 2 },
       { product: products[2], quantity: 2 },
@@ -155,19 +145,18 @@ export const quotations: Quotation[] = [
     priceVariation: 5,
     estimatedPrice: '',
     quotedBy: 'คุณ อริย์ธัช',
-    quotedDateTime: '2020-03-22T15:00:00.000+07:00',
   },
   {
     id: '01200003',
     hn: '0119043435',
     an: '01190014354',
     patient: 'Mr. Tyrus Dentith',
-    birthdate: '1960-03-21T18:20:00.000+07:00',
+    birthdate: null,
     age: 60,
     payment: 'thai',
     physician: 'นพ.ดำรัส ตรีสุโกศล',
     procedure: 'PCI',
-    procedureDateTime: '2020-03-28T13:30:00.000+07:00',
+    procedureDateTime: null,
     useProducts: [
       { product: products[1], quantity: 1 },
       { product: products[2], quantity: 2 },
@@ -177,6 +166,5 @@ export const quotations: Quotation[] = [
     priceVariation: 15,
     estimatedPrice: '',
     quotedBy: 'คุณ อริย์ธัช',
-    quotedDateTime: '2020-03-23T18:20:00.000+07:00',
   },
 ];

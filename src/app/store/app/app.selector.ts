@@ -9,6 +9,3 @@ export const device = createSelector(selectAppState, (state) => state.device);
 
 export const navbarMode = createSelector(selectAppState, (state) => state.navbarMode);
 export const navbarOpened = createSelector(selectAppState, (state) => state.navbarOpened);
-
-export const sidebarMode = createSelector(selectAppState, (state) => state.sidebarMode);
-export const sidebarOpened = createSelector(selectAppState, (state) => state.sidebarOpened);

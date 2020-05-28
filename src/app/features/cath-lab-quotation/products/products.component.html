@@ -59,10 +59,10 @@
     </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="updatedDateTime">
+  <ng-container matColumnDef="updatedAt">
     <mat-header-cell class="header-center" style="flex: 15%" mat-header-cell *matHeaderCellDef>Updated</mat-header-cell>
     <mat-cell class="cell-center" style="flex: 15%" mat-cell *matCellDef="let element">
-      {{ element.updatedDateTime | isoDate:"datetime" }} </mat-cell>
+      {{ element.updatedAt | isoDate:"datetime" }} </mat-cell>
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

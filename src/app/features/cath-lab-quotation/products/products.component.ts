@@ -1,29 +1,40 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { Observable, Subscription } from 'rxjs';
 
-import * as mock from '../cath-lab-quotation.mock';
-import { ProductGroup, Product, GroupBy, DB_PRODUCT } from '../cath-lab-quotation.model';
+import { ProductGroup, Product, GroupBy } from '../cath-lab-quotation.model';
 import { ProductComponent } from '../product/product.component';
-import { FirestoreService } from 'src/app/shared/services/firestore.service';
 import { CathLabQuotationService } from '../cath-lab-quotation.service';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/store/root-store.state';
+import { ClqStoreSelectors } from 'src/app/store/cath-lab-quotation';
 
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss'],
 })
-export class ProductsComponent implements OnInit {
-  private products = mock.products;
+export class ProductsComponent implements OnInit, OnDestroy {
+  private subscriptions: Subscription[] = [];
+
+  private products: Product[];
   private groupedProducts: ProductGroup[] = [];
   private flattedProducts: (Product | GroupBy)[] = [];
   private collapsedGroup: GroupBy[] = [];
 
-  displayedColumns: string[] = ['description', 'name', 'brand', 'category', 'thaiPrice', 'interPrice', 'status', 'updatedDateTime'];
+  displayedColumns: string[] = ['description', 'name', 'brand', 'category', 'thaiPrice', 'interPrice', 'status', 'updatedAt'];
   dataSource: MatTableDataSource<Product | GroupBy>;
 
-  constructor(private dialog: MatDialog, private afs: AngularFirestore, private quotationService: CathLabQuotationService) {}
+  constructor(private dialog: MatDialog, private store: Store<AppState>, private quotationService: CathLabQuotationService) {
+    this.subscriptions.push(
+      this.store.select(ClqStoreSelectors.products).subscribe((products) => {
+        this.products = products;
+        this.groupingProducts();
+        this.flattenGroupedProducts();
+      })
+    );
+  }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -31,13 +42,17 @@ export class ProductsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.groupingProducts();
-    this.flattenGroupedProducts();
+    // this.groupingProducts();
+    // this.flattenGroupedProducts();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((subs) => subs.unsubscribe());
   }
 
   private groupingProducts() {
     this.groupedProducts = [];
-    this.products.forEach(
+    this.products?.forEach(
       ((hash: ProductGroup) => {
         return (a: Product) => {
           if (!hash[a.category]) {
@@ -90,33 +105,24 @@ export class ProductsComponent implements OnInit {
   productClicked(product: Product) {
     this.productDialog(product)
       .afterClosed()
-      .subscribe((result: Product) => {
-        if (result) {
-          const index = this.products.findIndex((el) => el.id === result.id);
-          this.products[index] = result;
-
-          this.groupingProducts();
-          this.flattenGroupedProducts();
-        }
-      });
+      .subscribe((result: Product) => this.updateProduct(result));
   }
 
   addClicked() {
     this.productDialog(null)
       .afterClosed()
-      .subscribe((result: Product) => {
-        if (result) {
-          this.products.push(result);
-          this.saveProduct(result);
-
-          this.groupingProducts();
-          this.flattenGroupedProducts();
-        }
-      });
+      .subscribe((result: Product) => this.addProduct(result));
   }
 
-  saveProduct(product: Product) {
-    console.log('save');
-    this.quotationService.addProduct(product);
+  addProduct(product: Product) {
+    if (product) {
+      this.quotationService.addProduct(product);
+    }
+  }
+
+  updateProduct(product: Product) {
+    if (product) {
+      this.quotationService.updateProduct(product);
+    }
   }
 }

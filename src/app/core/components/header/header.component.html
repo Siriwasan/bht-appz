@@ -16,11 +16,6 @@
       <button mat-icon-button>
         <mat-icon>help_outline</mat-icon>
       </button> -->
-
-      <button mat-icon-button *ngIf="(device$ | async) === 'HandsetPortrait' && (sidebarMode$ | async)"
-        (click)="toggleSidebar()">
-        <mat-icon>more_horiz</mat-icon>
-      </button>
     </div>
   </mat-toolbar-row>
 </mat-toolbar>

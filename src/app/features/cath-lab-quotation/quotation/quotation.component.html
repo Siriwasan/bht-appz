@@ -22,8 +22,8 @@
     <reg-datepicker controlName="birthdate" placeholder="Birth Date" [formGroup]="quotationForm" fxFlex>dd/mm/yyyy
     </reg-datepicker>
 
-    <reg-input controlName="age" placeholder="Age" [formGroup]="quotationForm" type="number" fxFlex
-      [controlService]="controlService" [readonly]="true"></reg-input>
+    <reg-input controlName="age" placeholder="Age (year)" [formGroup]="quotationForm" type="number" fxFlex
+      [controlService]="controlService" [readonly]="true">(auto calculated)</reg-input>
   </div>
 
   <div>
@@ -52,7 +52,7 @@
 
         <div [formGroup]="fg" fxFlex>
           <reg-select-search controlName="product" placeholder="Product" [formGroup]="fg"
-            [choices]="products['useProducts'][i]" fxFlex [nullOption]="false" [group]="true" sortChoice="asc"
+            [choices]="productList['useProducts'][i]" fxFlex [nullOption]="false" [group]="true" sortChoice="asc"
             sortGroup="asc" [controlService]="controlService">
           </reg-select-search>
 
@@ -95,7 +95,7 @@
 
         <div [formGroup]="fg" fxFlex>
           <reg-select-search controlName="product" placeholder="Product" [formGroup]="fg"
-            [choices]="products['backupProducts'][i]" fxFlex [nullOption]="false" [group]="true" sortChoice="asc"
+            [choices]="productList['backupProducts'][i]" fxFlex [nullOption]="false" [group]="true" sortChoice="asc"
             sortGroup="asc" [controlService]="controlService">
           </reg-select-search>
 
@@ -126,9 +126,19 @@
   <reg-input controlName="quotedBy" placeholder="Quoted By" [formGroup]="quotationForm" type="text" fxFlex
     [controlService]="controlService"></reg-input>
 
-  <reg-input controlName="quotedDateTime" placeholder="Quoted Date/Time" [formGroup]="quotationForm" type="text" fxFlex
-    [controlService]="controlService"></reg-input>
+  <div *ngIf="quotationForm.get('createdAt').value">
+    <reg-input controlName="createdAt" placeholder="Created Date/Time" [formGroup]="quotationForm" type="text" fxFlex
+      [controlService]="controlService" [require]="false" [readonly]="true"></reg-input>
+    <reg-input controlName="updatedAt" placeholder="Updated Date/Time" [formGroup]="quotationForm" type="text" fxFlex
+      [controlService]="controlService" [require]="false" [readonly]="true"></reg-input>
+  </div>
 </form>
+
+<div style="margin: 15px 0px" fxLayoutAlign="end center">
+  <button mat-raised-button style="margin: 10px" color="primary" (click)="submit()"
+    [disabled]="!quotationForm.valid">{{ addMode ? 'Create' : 'Update' }}</button>
+  <button mat-raised-button style="margin: 10px">Discard</button>
+</div>
 
 {{ quotationForm.value | json }}
 

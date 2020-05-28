@@ -1,9 +1,13 @@
 <h1>Quotations</h1>
 
-<mat-form-field>
-  <mat-label>Filter</mat-label>
-  <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium">
-</mat-form-field>
+<div>
+  <mat-form-field fxFlex>
+    <mat-label>Filter</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium">
+  </mat-form-field>
+  <button style="width: 75px; height: 36px; margin-left: 20px;" mat-raised-button color="primary"
+    (click)="addClicked()">Add</button>
+</div>
 
 <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 

@@ -1,5 +1,10 @@
 <div fxLayoutAlign="space-between center" style="margin-bottom: 16px;">
-  <h1 mat-dialog-title style="margin-bottom: 0;">{{ productForm.controls['name'].value }}</h1>
+  <div>
+    <h1 mat-dialog-title style="margin-bottom: 0;">
+      {{ productForm.controls['name'].value ? productForm.controls['name'].value : '(new)' }}</h1>
+    <h5 style="margin-bottom: 0; font-style: italic; color: gainsboro;">
+      {{ productForm.controls['id'].value ? productForm.controls['id'].value : '' }}</h5>
+  </div>
   <button mat-icon-button color="warn" aria-label="Close" mat-dialog-close tabindex="-1">
     <mat-icon>close</mat-icon>
   </button>

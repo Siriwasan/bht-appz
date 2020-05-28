@@ -16,9 +16,7 @@ export class HomeComponent implements OnInit {
 
   constructor(private store: Store<AppState>) {}
 
-  ngOnInit(): void {
-    this.store.dispatch(AppStoreActions.setSidebarMode({ mode: null }));
-  }
+  ngOnInit(): void {}
 
   increment() {
     this.store.dispatch(CounterStoreActions.increment());
